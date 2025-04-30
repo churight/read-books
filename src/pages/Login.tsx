@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [token, setToken] = useState('');
+  //const [token, setToken] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -13,9 +15,11 @@ const Login = () => {
       const res = await axios.post('http://localhost:4000/api/auth/login', {
         email,
         password,
+      }, {
+        withCredentials: true
       });
-      setToken(res.data.token);
       setMessage('Login successful');
+      navigate('/profile');
     } catch (err: any) {
       setMessage(err.response?.data?.message || 'Error occurred');
     }
@@ -42,7 +46,6 @@ const Login = () => {
         <button type="submit">Login</button>
       </form>
       <p>{message}</p>
-      {token && <p>Token: {token}</p>}
     </div>
   );
 };

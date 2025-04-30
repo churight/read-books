@@ -3,6 +3,8 @@ import { User } from "../models/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
+import { protect } from "../middleware/authMiddleware";
+import { AuthRequest } from "../models/Authrequest";
 
 dotenv.config();
 
@@ -52,10 +54,32 @@ router.post('/login', async (req, res) =>{
 
         const token = jwt.sign({id:user._id}, process.env.JWT_SECRET as string, {expiresIn: '1h'})
 
-        res.json({token});
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 3600000, // 1 hour
+          });
+          
+          res.json({ message: 'Login successful' });
     }catch(e){
         res.status(500).json({message:"Server Error", e})
     }
 });
+
+//profile
+
+router.get('/profile',protect, async (req: express.Request & { user?: any }, res) =>{
+    try{
+        const user = await User.findById(req.user?._id).select('-password');
+        if(!user) return res.status(404).json({message: "User not found"});
+        res.json({
+            nickname: user.nickname,
+            email: user.email,
+          });
+    }catch(e){
+        res.status(500).json({message:"Server Error", e})
+    }
+})
 
 export default router;

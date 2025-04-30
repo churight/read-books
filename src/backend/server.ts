@@ -3,12 +3,20 @@ import connectToDB from "./connectToDB";
 import { protect } from "./middleware/authMiddleware";
 import authRoutes from "./routes/auth";
 import cors from "cors";
+import cookieParser from "cookie-parser"
 
 const app=express();
 const PORT=4000;
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3000', // Frontend origin (React)
+  credentials: true, // Allow credentials (cookies)
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+
+app.use(cookieParser());
 
 connectToDB();
 
