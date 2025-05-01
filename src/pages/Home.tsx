@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import IBook from "../interfaces/IBook";
+import { Link } from "react-router-dom";
 
 const Home = ()=>{
     const [books, setBooks] = useState<IBook[]>([]);
@@ -13,7 +14,7 @@ const Home = ()=>{
 
                 setBooks(res.data);
                 setLoading(false);
-                console.log("Books fetached", res.data);
+                //console.log("Books fetached", res.data);
             } catch(err){
                 console.error("Error fetching data:", err);
                 setLoading(false);
@@ -29,10 +30,12 @@ const Home = ()=>{
         <div>
             <h1>Books</h1>
             {books.map(book => (
-            <div key={book._id}>
-                <h2>{book.title}</h2>
-                <p>{book.authors?.join(", ")}</p>
+            <Link to={`/book/${book.isbn13}`} key={book._id}>
+            <div className="border rounded-lg p-4 shadow hover:shadow-lg transition cursor-pointer">
+              <h2 className="text-lg font-semibold">{book.title}</h2>
+              <p className="text-sm text-gray-700">By: {book.authors.join(', ')}</p>
             </div>
+          </Link>
             ))}
         </div>
       );

@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Header from './components/Header'; // make sure this path is correct
 import Profile from './pages/Profile';
 import Home from './pages/Home';
+import BookInfo from './pages/BookInfo';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />}/>
         <Route path="/home" element={<Home />}/>
+        <Route path="/book/:isbn13" element={<BookInfo />} />
       </Routes>
     </Router>
   );
