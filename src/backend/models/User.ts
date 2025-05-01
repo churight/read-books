@@ -12,4 +12,6 @@ const UserSchema: Schema = new Schema<IUser>({
     password: {type:String, required: true}
 })
 
-export const User = mongoose.model<IUser>('User', UserSchema)
+const authDb = mongoose.connection.useDb('auth_db');
+
+export const User = authDb.model<IUser>('User', UserSchema)

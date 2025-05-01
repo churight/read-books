@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import { protect } from "../middleware/authMiddleware";
-import { AuthRequest } from "../models/Authrequest";
 
 dotenv.config();
 
