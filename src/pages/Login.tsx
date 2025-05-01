@@ -19,7 +19,7 @@ const Login = () => {
         withCredentials: true
       });
       setMessage('Login successful');
-      navigate('/profile');
+      navigate('/home');
     } catch (err: any) {
       setMessage(err.response?.data?.message || 'Error occurred');
     }

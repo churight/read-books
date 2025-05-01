@@ -17,6 +17,9 @@ const Header = ()=>{
                 <Link to="/register">
                 Register
                 </Link>
+                <Link to="/profile">
+                Profile
+                </Link>
                 
             </nav>
         </header>
