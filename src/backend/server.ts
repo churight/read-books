@@ -23,11 +23,11 @@ connectToDB();
 
 app.get('/', (req, res) =>{
     res.status(200).send("working")
-})
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/read', bookRoutes)
+app.use('/api/read', bookRoutes);
 
 // Example of a protected route
 app.get('/api/protected', protect, (req, res) => {

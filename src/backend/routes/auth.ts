@@ -11,8 +11,8 @@ const router = express.Router();
 
 //register
 
-router.post('/register', async (req: Request, res:Response) =>{
-    const {nickname, email, password} = req.body;
+router.post('/register', async (req: Request, res: Response) => {
+    const { nickname, email, password } = req.body;
 
     if(!email||!password||!nickname){
         return res.status(400).json({message:"Please enter all fields"})
