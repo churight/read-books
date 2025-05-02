@@ -1,6 +1,8 @@
 // Profile.tsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../services/handleLogOut';
 
 interface UserProfile {
     nickname: string;
@@ -11,6 +13,7 @@ const Profile = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -30,6 +33,14 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
+  const handleLogout = async () => {
+    const success = await logout();
+    if (success) {
+      setUser(null);
+      navigate('/login');
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
 
   // Show error if something went wrong
@@ -39,6 +50,7 @@ const Profile = () => {
     <div>
       <h1>Welcome {user?.nickname}</h1>
       <p>Email: {user?.email}</p>
+      <button onClick={handleLogout}>Log Out</button>
     </div>
   );
 };
