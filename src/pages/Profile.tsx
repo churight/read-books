@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../services/handleLogOut';
+import { isAuthenticated } from '../services/isAuthenticated';
 
 interface UserProfile {
     nickname: string;
@@ -18,6 +19,11 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
+        const auth = await isAuthenticated();
+        if (!auth) {
+            navigate('/login');
+            return;
+          }
         const res = await axios.get('http://localhost:4000/api/auth/profile', {
           withCredentials: true
         });
