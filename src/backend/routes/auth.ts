@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, Router } from "express";
 import { User } from "../models/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
@@ -7,7 +7,7 @@ import { protect } from "../middleware/authMiddleware";
 
 dotenv.config();
 
-const router = express.Router();
+const router: Router = express.Router();
 
 //register
 

@@ -1,7 +1,7 @@
-import express from "express";
+import express, { Router } from "express";
 import { Book } from "../models/Books";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 //display books (for home pagem)
 
@@ -12,9 +12,7 @@ router.get('/home', async (req, res) =>{
     }catch(e){
         res.status(500).json({message:"Internall server error", e})
 }
-})
-
-export default router;
+});
 
 //display book page
 
@@ -28,3 +26,5 @@ router.get('/book/:isbn13', async (req, res) => {
         res.status(500).json({ message: "Server error", error: e });
     }
 });
+
+export default router;
