@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { User } from "../models/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
@@ -11,7 +11,7 @@ const router = express.Router();
 
 //register
 
-router.post('/register', async (req, res) =>{
+router.post('/register', async (req: Request, res:Response) =>{
     const {nickname, email, password} = req.body;
 
     if(!email||!password||!nickname){
