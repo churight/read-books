@@ -27,7 +27,7 @@ app.get('/', (req, res) =>{
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/read', bookRoutes);
+app.use('/api/browse', bookRoutes);
 
 // Example of a protected route
 app.get('/api/protected', protect, (req, res) => {

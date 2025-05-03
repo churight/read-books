@@ -10,7 +10,7 @@ const Home = ()=>{
     useEffect(() =>{
         const fetchBooksHome= async () =>{
             try{
-                const res = await axios.get('http://localhost:4000/api/read/home');
+                const res = await axios.get('http://localhost:4000/api/browse/home');
 
                 setBooks(res.data);
                 setLoading(false);

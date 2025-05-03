@@ -1,5 +1,7 @@
 import express, { Router } from "express";
 import { Book } from "../models/Books";
+import { protect } from "../middleware/authMiddleware";
+import { Favourite } from "../models/Favourite";
 
 const router: Router = express.Router();
 
@@ -27,4 +29,9 @@ router.get('/book/:isbn13', async (req, res) => {
     }
 });
 
+//add to favourites
+
+router.post('/add', protect, async (req, res)=>{
+    
+})
 export default router;

@@ -12,11 +12,6 @@ function App() {
   return (
     <Router>
       <Header />
-
-      <nav>
-        <Link to="/register">Register</Link> | <Link to="/login">Login</Link>
-      </nav>
-
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

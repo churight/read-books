@@ -1,8 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 
 const FavouriteSchema: Schema = new Schema({
-    user_id: String,
-    books_id: [String]
+    user_id: {type:String},
+    books_isbn13: [{type:Number}]
 })
 
 const favouriteDb=mongoose.connection.useDb('favourite-books-db');

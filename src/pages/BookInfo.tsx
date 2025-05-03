@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import IBook from "../interfaces/IBook";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { handleAddFavourites } from "../services/handleAddFavourite";
 
 const BookInfo =()=>{
     const [book, setBook] = useState<IBook | null>(null);
@@ -11,7 +12,7 @@ const BookInfo =()=>{
     useEffect(() =>{
         const fetchBook = async ()=>{
             try{
-                const res = await await axios.get(`http://localhost:4000/api/read/book/${isbn13}`);
+                const res = await await axios.get(`http://localhost:4000/api/browse/book/${isbn13}`);
 
                 setBook(res.data);
                 setLoading(false);
@@ -42,6 +43,7 @@ const BookInfo =()=>{
             <p><strong>ISBN-10:</strong> {book.isbn10}</p>
             <p><strong>Average Rating:</strong> {book.average_rating}</p>
             <p><strong>Ratings Count:</strong> {book.ratings_count}</p>
+            <button onClick={() => handleAddFavourites(String(book.isbn13))}>Add to Favourite</button>
         </div>
       );
 };
