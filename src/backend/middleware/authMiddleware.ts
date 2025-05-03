@@ -2,12 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { User } from "../models/User";
+import { AuthRequest } from "../models/AuthRequest";
 
 dotenv.config();
-
-interface AuthRequest extends Request{
-    user?: any;
-}
 
 export const protect = async (req: AuthRequest, res: Response, next: NextFunction) =>{
     const token = req.cookies.token;

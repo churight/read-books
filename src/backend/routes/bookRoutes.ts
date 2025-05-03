@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import { Book } from "../models/Books";
 import { protect } from "../middleware/authMiddleware";
 import { Favourite } from "../models/Favourite";
+import { AuthRequest } from "../models/AuthRequest";
 
 const router: Router = express.Router();
 
@@ -31,7 +32,39 @@ router.get('/book/:isbn13', async (req, res) => {
 
 //add to favourites
 
-router.post('/add', protect, async (req, res)=>{
-    
+router.post('/add', protect, async (req: AuthRequest, res)=>{
+    try {
+        const userId = req.user.id;
+        const { isbn13 } = req.body;
+
+        if (!isbn13) {
+            return res.status(400).json({ message: "ISBN13 is required" });
+        }
+
+        // Check if user already has a favourites document
+        let favourite = await Favourite.findOne({ user_id: userId });
+
+        if (!favourite) {
+            // Create a new favourites document for the user
+            favourite = new Favourite({
+                user_id: userId,
+                books_isbn13: [isbn13],
+            });
+        } else {
+            // Avoid adding duplicates
+            if (!favourite.books_isbn13.includes(isbn13)) {
+                favourite.books_isbn13.push(isbn13);
+            } else {
+                return res.status(409).json({ message: "Book already in favourites" });
+            }
+        }
+
+        await favourite.save();
+        res.status(200).json({ message: "Book added to favourites", favourite });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
 })
 export default router;

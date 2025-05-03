@@ -1,4 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
+
+export interface FavouriteDocument extends Document {
+    user_id: string;
+    books_isbn13: number[];
+}
 
 const FavouriteSchema: Schema = new Schema({
     user_id: {type:String},
@@ -6,4 +11,4 @@ const FavouriteSchema: Schema = new Schema({
 })
 
 const favouriteDb=mongoose.connection.useDb('favourite-books-db');
-export const Favourite = favouriteDb.model('Favoutite_Books', FavouriteSchema)
+export const Favourite = favouriteDb.model<FavouriteDocument>('Favoutite_Books', FavouriteSchema)
