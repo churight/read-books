@@ -11,20 +11,25 @@ const router = express.Router();
 
 //register
 
-router.post('/register', async (req: Request, res: Response) => {
+router.post('/register', async (req: Request, res: Response): Promise<void> => {
     const { nickname, email, password } = req.body;
 
     if (!email || !password || !nickname) {
-        return res.status(400).json({ message: "Please enter all fields" });
+        res.status(400).json({ message: "Please enter all fields" });
+        return;
     }
 
     if (password.length < 8) {
-        return res.status(400).json({ message: "Password should be at least 8 characters" });
+        res.status(400).json({ message: "Password should be at least 8 characters" });
+        return;
     }
 
     try {
         const existingUser = await User.findOne({ email });
-        if (existingUser) return res.status(400).json({ message: "User already exists" });
+        if (existingUser){
+            res.status(400).json({ message: "User already exists" });
+            return;
+        }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -39,17 +44,25 @@ router.post('/register', async (req: Request, res: Response) => {
 
 //login
 
-router.post('/login', async (req: Request, res: Response) =>{
+router.post('/login', async (req: Request, res: Response): Promise<void> =>{
     const {email, password} = req. body;
     
-    if (!email || !password) return res.status(400).json({message:"fill email AND password"});
-
+    if (!email || !password) {
+        res.status(400).json({message:"fill email AND password"});
+        return;
+        }
     try{
         const user = await User.findOne({email});
-        if(!user) return res.status(400).json({message: "No user found"});
+        if(!user) {
+            res.status(400).json({message: "No user found"});
+            return;
+        }
 
         const isMatch = await bcrypt.compare(password, user.password);
-        if(!isMatch) return res.status(400).json({message: "Wrong password"});
+        if(!isMatch) {
+            res.status(400).json({message: "Wrong password"});
+            return;
+        }
 
         const token = jwt.sign({id:user._id}, process.env.JWT_SECRET as string, {expiresIn: '1h'})
 
@@ -68,10 +81,13 @@ router.post('/login', async (req: Request, res: Response) =>{
 
 //profile
 
-router.get('/profile',protect, async (req: Request & { user?: any }, res: Response) =>{
+router.get('/profile',protect, async (req: Request & { user?: any }, res: Response): Promise<void> =>{
     try{
         const user = await User.findById(req.user?._id).select('-password');
-        if(!user) return res.status(404).json({message: "User not found"});
+        if(!user) {
+            res.status(404).json({message: "User not found"});
+            return;
+        }
         res.json({
             nickname: user.nickname,
             email: user.email,
@@ -82,7 +98,7 @@ router.get('/profile',protect, async (req: Request & { user?: any }, res: Respon
 })
 
 //sign out
-router.post('/logout', async(req: Request, res: Response) =>{
+router.post('/logout', async(req: Request, res: Response): Promise<void> =>{
     try{
         res.clearCookie('token', {
             httpOnly: true,

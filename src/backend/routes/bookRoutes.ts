@@ -19,11 +19,14 @@ router.get('/home', async (req, res) =>{
 
 //display book page
 
-router.get('/book/:isbn13', async (req, res) => {
+router.get('/book/:isbn13', async (req, res): Promise<void> => {
     try {
         const isbnNum = parseInt(req.params.isbn13, 10);
         const book = await Book.findOne({ isbn13: isbnNum });
-        if (!book) return res.status(404).json({ message: 'Book not found' });
+        if (!book){
+            res.status(404).json({ message: 'Book not found' });
+            return;
+        }
         res.json(book);
     } catch (e) {
         res.status(500).json({ message: "Server error", error: e });
@@ -32,13 +35,14 @@ router.get('/book/:isbn13', async (req, res) => {
 
 //add to favourites
 
-router.post('/add', protect, async (req: AuthRequest, res)=>{
+router.post('/add', protect, async (req: AuthRequest, res): Promise<void>=>{
     try {
         const userId = req.user.id;
         const { isbn13 } = req.body;
 
         if (!isbn13) {
-            return res.status(400).json({ message: "ISBN13 is required" });
+            res.status(400).json({ message: "ISBN13 is required" });
+            return;
         }
 
         // Check if user already has a favourites document
@@ -55,7 +59,8 @@ router.post('/add', protect, async (req: AuthRequest, res)=>{
             if (!favourite.books_isbn13.includes(isbn13)) {
                 favourite.books_isbn13.push(isbn13);
             } else {
-                return res.status(409).json({ message: "Book already in favourites" });
+                res.status(409).json({ message: "Book already in favourites" });
+                return;
             }
         }
 
@@ -68,14 +73,15 @@ router.post('/add', protect, async (req: AuthRequest, res)=>{
     }
 })
 
-router.get('/favourites', protect, async(req: AuthRequest, res) =>{
+router.get('/favourites', protect, async(req: AuthRequest, res): Promise<void> =>{
     try{
         const userId = req.user.id;
         
         const favourite = await Favourite.findOne({user_id: userId});
 
         if (!favourite || favourite.books_isbn13.length === 0){
-            return res.status(200).json({favouriteBooks: []});
+            res.status(200).json({favouriteBooks: []});
+            return;
         }
 
         const books = await Book.find({isbn13: {$in: favourite.books_isbn13}})

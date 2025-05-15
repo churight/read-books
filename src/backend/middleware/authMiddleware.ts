@@ -6,23 +6,30 @@ import { AuthRequest } from "../models/AuthRequest";
 
 dotenv.config();
 
-export const protect = async (req: AuthRequest, res: Response, next: NextFunction) =>{
+export const protect = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> =>{
     const token = req.cookies.token;
 
-    if(!token) return res.status(401).json({message: "No token"});
+    if(!token){
+      res.status(401).json({message: "No token"}); 
+      return
+    };
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
         if (typeof decoded === 'object' && 'id' in decoded) {
             const user = await User.findById(decoded.id).select('-password');
-            if (!user) return res.status(404).json({ message: 'User not found' });
+            if (!user) {
+              res.status(404).json({ message: 'User not found' }); 
+              return};
       
             req.user = user;
             next();
           } else {
-            return res.status(401).json({ message: 'Invalid token payload' });
+            res.status(401).json({ message: 'Invalid token payload' });
+            return
           }
     }catch(e){
-        return res.status(401).json({message: 'Token is not valid'});
+       res.status(401).json({message: 'Token is not valid'});
+       return;
     }
 
 }
