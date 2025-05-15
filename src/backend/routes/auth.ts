@@ -14,26 +14,26 @@ const router: Router = express.Router();
 router.post('/register', async (req, res) => {
     const { nickname, email, password } = req.body;
 
-    if(!email||!password||!nickname){
-        return res.status(400).json({message:"Please enter all fields"})
+    if (!email || !password || !nickname) {
+        return res.status(400).json({ message: "Please enter all fields" });
     }
 
-    if (password.length<8){
-        return res.status(400).json({message: "Password should be at least 8 characters"})
+    if (password.length < 8) {
+        return res.status(400).json({ message: "Password should be at least 8 characters" });
     }
 
-    try{
-        const existingUser = await User.findOne({email});
-        if (existingUser) return res.status(400).json({message: "User already exists"})
+    try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) return res.status(400).json({ message: "User already exists" });
 
-        const hashedPassword = await bcrypt.hash(password, 10)
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = new User({nickname, email, password:hashedPassword});
+        const user = new User({ nickname, email, password: hashedPassword });
         await user.save();
 
-        res.status(201).json({message: "user registered successful"})
-    }catch(e){
-        res.status(500).json({message:"Error", e})
+        res.status(201).json({ message: "User registered successfully" });
+    } catch (e) {
+        res.status(500).json({ message: "Error", error: e });
     }
 });
 

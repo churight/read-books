@@ -78,7 +78,8 @@ router.get('/favourites', protect, async(req: AuthRequest, res) =>{
             return res.status(200).json({favouriteBooks: []});
         }
 
-        const books = await Book.find({isbn13: {$in: favourite.books_isbn13}});
+        const books = await Book.find({isbn13: {$in: favourite.books_isbn13}})
+            .select('isbn13 title authors -_id');
         res.status(200).json({favouriteBooks: books});
     }catch(error){
         console.error(error);

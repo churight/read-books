@@ -10,8 +10,15 @@ interface UserProfile {
     email: string;
   }
 
+interface FavouriteBooks{
+    isbn13: string;
+    title: string;
+    authors: string[];
+}
+
 const Profile = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [favourites, setFavourites] = useState<FavouriteBooks[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -30,6 +37,11 @@ const Profile = () => {
         setUser(res.data);
         setLoading(false);
         console.log('Profile data:', res.data);
+
+        const favRes = await axios.get('http://localhost:4000/api/browse/favourites', {
+          withCredentials: true
+        });
+        setFavourites(favRes.data.favouriteBooks);
       } catch (err) {
         console.error('Unauthorized or error fetching profile');
         setLoading(false);
@@ -57,6 +69,19 @@ const Profile = () => {
       <h1>Welcome {user?.nickname}</h1>
       <p>Email: {user?.email}</p>
       <button onClick={handleLogout}>Log Out</button>
+
+       <h2 style={{ marginTop: "30px" }}>Your Favourite Books</h2>
+      {favourites.length === 0 ? (
+        <p>You have no favourite books.</p>
+      ) : (
+        <ul>
+          {favourites.map((book) => (
+            <li key={book.isbn13}>
+              <strong>{book.title}</strong> by {book.authors.join(', ')}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

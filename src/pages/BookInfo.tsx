@@ -3,11 +3,13 @@ import IBook from "../interfaces/IBook";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { handleAddFavourites } from "../services/handleAddFavourite";
-
+import useFavourites from "../hooks/useFavourites";
 const BookInfo =()=>{
     const [book, setBook] = useState<IBook | null>(null);
     const [loading, setLoading] = useState(true);
     const {isbn13} = useParams<{isbn13: string}>();
+
+    const {favourites, loading: favLoading, addFavourite} = useFavourites();
 
     useEffect(() =>{
         const fetchBook = async ()=>{
@@ -27,8 +29,16 @@ const BookInfo =()=>{
 
     }, [isbn13]);
 
+    const handleClick = async () => {
+    if (!book) return;
+    await handleAddFavourites(String(book.isbn13));
+    addFavourite(String(book.isbn13)); // update local favourites state
+    };
+
     if (loading) return <div>Loading...</div>;
     if (!book) return <div>Book not found</div>;
+
+     const isFavourite = favourites.includes(String(book.isbn13));
 
     return (
         <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
@@ -43,8 +53,12 @@ const BookInfo =()=>{
             <p><strong>ISBN-10:</strong> {book.isbn10}</p>
             <p><strong>Average Rating:</strong> {book.average_rating}</p>
             <p><strong>Ratings Count:</strong> {book.ratings_count}</p>
-            <button onClick={() => handleAddFavourites(String(book.isbn13))}>Add to Favourite</button>
-        </div>
+             {isFavourite ? (
+                    <span style={{ fontWeight: "bold", color: "green" }}>Favourite</span>
+                ) : (
+                    <button onClick={handleClick}>Add to Favourite</button>
+                )}
+                </div>
       );
 };
 
