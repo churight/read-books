@@ -7,7 +7,7 @@ import { protect } from "../middleware/authMiddleware";
 
 dotenv.config();
 
-const router: Router = express.Router();
+const router = express.Router();
 
 //register
 
@@ -68,7 +68,7 @@ router.post('/login', async (req: Request, res: Response) =>{
 
 //profile
 
-router.get('/profile',protect, async (req: express.Request & { user?: any }, res: Response) =>{
+router.get('/profile',protect, async (req: Request & { user?: any }, res: Response) =>{
     try{
         const user = await User.findById(req.user?._id).select('-password');
         if(!user) return res.status(404).json({message: "User not found"});
