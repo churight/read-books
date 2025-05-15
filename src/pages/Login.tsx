@@ -18,6 +18,7 @@ const Login = () => {
       }, {
         withCredentials: true
       });
+      console.log('Login response:', res.data);
       setMessage('Login successful');
       navigate('/home');
     } catch (err: any) {

@@ -42,14 +42,15 @@ const Profile = () => {
           withCredentials: true
         });
         setFavourites(favRes.data.favouriteBooks);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Unauthorized or error fetching profile');
+        setError(err.response?.data?.message || 'Failed to load data');
         setLoading(false);
       }
     };
 
     fetchProfile();
-  }, []);
+  }, [navigate]);
 
   const handleLogout = async () => {
     const success = await logout();

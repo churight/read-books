@@ -9,7 +9,7 @@ const BookInfo =()=>{
     const [loading, setLoading] = useState(true);
     const {isbn13} = useParams<{isbn13: string}>();
 
-    const {favourites, loading: favLoading, addFavourite} = useFavourites();
+    const {favourites, addFavourite} = useFavourites();
 
     useEffect(() =>{
         const fetchBook = async ()=>{
