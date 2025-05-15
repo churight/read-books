@@ -11,7 +11,7 @@ const router: Router = express.Router();
 
 //register
 
-router.post('/register', async (req, res) => {
+router.post('/register', async (req: Request, res: Response) => {
     const { nickname, email, password } = req.body;
 
     if (!email || !password || !nickname) {
@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
 
 //login
 
-router.post('/login', async (req, res) =>{
+router.post('/login', async (req: Request, res: Response) =>{
     const {email, password} = req. body;
     
     if (!email || !password) return res.status(400).json({message:"fill email AND password"});
@@ -82,7 +82,7 @@ router.get('/profile',protect, async (req: express.Request & { user?: any }, res
 })
 
 //sign out
-router.post('/logout', async(req, res) =>{
+router.post('/logout', async(req: Request, res: Response) =>{
     try{
         res.clearCookie('token', {
             httpOnly: true,
