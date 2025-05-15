@@ -67,4 +67,22 @@ router.post('/add', protect, async (req: AuthRequest, res)=>{
         res.status(500).json({ message: "Server error" });
     }
 })
+
+router.get('/favourites', protect, async(req: AuthRequest, res) =>{
+    try{
+        const userId = req.user.id;
+        
+        const favourite = await Favourite.findOne({user_id: userId});
+
+        if (!favourite || favourite.books_isbn13.length === 0){
+            return res.status(200).json({favouriteBooks: []});
+        }
+
+        const books = await Book.find({isbn13: {$in: favourite.books_isbn13}});
+        res.status(200).json({favouriteBooks: books});
+    }catch(error){
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+})
 export default router;
