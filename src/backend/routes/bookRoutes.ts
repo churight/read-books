@@ -94,13 +94,17 @@ router.get('/favourites', protect, async(req: AuthRequest, res): Promise<void> =
 })
 
 router.get('/search', async (req, res): Promise<void> =>{
-    const {query} = req.query;
-    console.log('Received query:', query);
+    const {query, sortBy, order} = req.query;
+    //console.log('Received query:', query);
 
     if(!query || typeof query !== 'string'){
         res.status(400).json({message: 'type query'});
         return;
     }
+
+    const sortFields = ['published_year', 'num_pages', 'average_rating'];
+    const sortField = sortFields.includes(String(sortBy)) ? String (sortBy): null;
+    const sortOrder = order === 'desc' ? -1: 1; //default sorting order descending
 
     try{
         const books = await Book.find({
@@ -108,9 +112,12 @@ router.get('/search', async (req, res): Promise<void> =>{
                 {title: {$regex: query, $options: 'i'}},
                 {authors: {$regex: query, $options: 'i'}},
             ]
-        })
+        }). sort (
+            sortField ? {[sortField]: sortOrder}: {}
+        );
         res.json(books); // im dumb bitch, i forgot to send response aaaaaaaaaaaaaaaaaaaaaaaaaaa
     }catch(err){
+        console.error(err)
         res.status(500).json({ message: "Server error" })
     }
 })
