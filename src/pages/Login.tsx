@@ -20,7 +20,7 @@ const Login = () => {
       });
       console.log('Login response:', res.data);
       setMessage('Login successful');
-      navigate('/home');
+      navigate('/browse');
     } catch (err: any) {
       setMessage(err.response?.data?.message || 'Error occurred');
     }

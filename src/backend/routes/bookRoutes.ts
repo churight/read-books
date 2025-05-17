@@ -92,4 +92,26 @@ router.get('/favourites', protect, async(req: AuthRequest, res): Promise<void> =
         res.status(500).json({ message: "Server error" });
     }
 })
+
+router.get('/search', async (req, res): Promise<void> =>{
+    const {query} = req.query;
+    console.log('Received query:', query);
+
+    if(!query || typeof query !== 'string'){
+        res.status(400).json({message: 'type query'});
+        return;
+    }
+
+    try{
+        const books = await Book.find({
+            $or: [
+                {title: {$regex: query, $options: 'i'}},
+                {authors: {$regex: query, $options: 'i'}},
+            ]
+        })
+        res.json(books); // im dumb bitch, i forgot to send response aaaaaaaaaaaaaaaaaaaaaaaaaaa
+    }catch(err){
+        res.status(500).json({ message: "Server error" })
+    }
+})
 export default router;

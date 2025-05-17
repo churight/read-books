@@ -26,7 +26,10 @@ const useFavourites = () => {
   }, []);
 
   const addFavourite = (isbn13: string) => {
-    setFavourites((prev) => [...prev, isbn13]);
+    setFavourites((prev) => {
+        if (prev.includes(isbn13)) return prev;
+        return [...prev, isbn13];
+    });;
   };
 
   return { favourites, loading, addFavourite };
