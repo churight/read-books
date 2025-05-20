@@ -57,6 +57,7 @@ export const Search = () =>{
         <button type="submit">Search</button>
       </form>
       {message && <p>{message}</p>}
+      {loading && <p>Loading...</p>}
 
       <ul>
         {results.map((book) => (

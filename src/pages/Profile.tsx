@@ -4,11 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../services/handleLogOut';
 import { isAuthenticated } from '../services/isAuthenticated';
-
-interface UserProfile {
-    nickname: string;
-    email: string;
-  }
+import UserProfile from '../interfaces/IUserProfile';
 
 interface FavouriteBooks{
     isbn13: string;
@@ -44,8 +40,9 @@ const Profile = () => {
         setFavourites(favRes.data.favouriteBooks);
       } catch (err: any) {
         console.error('Unauthorized or error fetching profile');
-        setError(err.response?.data?.message || 'Failed to load data');
+        //setError(err.response?.data?.message || 'Failed to load data');
         setLoading(false);
+        navigate('/login');
       }
     };
 
