@@ -41,6 +41,7 @@ const Profile = () => {
       } catch (err: any) {
         console.error('Unauthorized or error fetching profile');
         //setError(err.response?.data?.message || 'Failed to load data');
+        setError(err);
         setLoading(false);
         navigate('/login');
       }

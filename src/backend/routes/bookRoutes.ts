@@ -8,7 +8,7 @@ const router: Router = express.Router();
 
 //display books (for home pagem)
 
-router.get('/home', async (req, res) =>{
+router.get('/home', async (req, res) =>{ // need to rewrite it overall, cause so far works only for 10 books
     try{
         const book = await Book.find().limit(10);
         res.json(book);
@@ -16,6 +16,27 @@ router.get('/home', async (req, res) =>{
         res.status(500).json({message:"Internall server error", e})
 }
 });
+
+router.get('/browse', async (req, res) =>{
+    const page = parseInt(req.query.page as string) || 1; // Default to page 1
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+    try{
+        const books = await Book.find().skip(skip).limit(limit);
+        const totalBooks = await Book.countDocuments();
+        const totalPages = Math.ceil(totalBooks / limit);
+
+        res.json({
+        books,
+        currentPage: page,
+        totalPages,
+        });
+
+    }catch(e){
+        res.status(500).json({message:"Internal server error", e})
+    }
+})
 
 //display book page
 

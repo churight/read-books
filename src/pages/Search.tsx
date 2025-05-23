@@ -33,6 +33,8 @@ export const Search = () =>{
         }
     }
 
+    if (loading) return <div>Loading...</div>;
+
     return (
     <div style={{ padding: '20px' }}>
       <h2>Search for a Book</h2>
@@ -57,7 +59,6 @@ export const Search = () =>{
         <button type="submit">Search</button>
       </form>
       {message && <p>{message}</p>}
-      {loading && <p>Loading...</p>}
 
       <ul>
         {results.map((book) => (

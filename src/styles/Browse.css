@@ -1,0 +1,69 @@
+.books-container {
+  padding: 2rem;
+}
+
+.book-card {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  color: inherit;
+}
+
+.book-card:hover {
+  transform: scale(1.01);
+}
+
+.book-card img {
+  width: 120px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 1.5rem;
+}
+
+.book-details {
+  flex: 1;
+}
+
+.book-details h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #222;
+}
+
+.book-details p {
+  margin-top: 0.5rem;
+  color: #666;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.pagination-controls button {
+  padding: 0.5rem 1rem;
+  background-color: #0074d9;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination-controls button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.pagination-controls span {
+  font-weight: bold;
+}

@@ -1,45 +1,46 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import {Swiper, SwiperSlide} from "swiper/react";
 import IBook from "../interfaces/IBook";
-import { Link } from "react-router-dom";
-
-const Home = ()=>{
+import "swiper/css"
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "../styles/Home.css"
+const Home = ()=> {
     const [books, setBooks] = useState<IBook[]>([]);
-    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate()
 
-    useEffect(() =>{
-        const fetchBooksHome= async () =>{
+    useEffect(()=>{
+        const fetchBooks = async () =>{ // i have identical function in Browse.tsx, so make it in another file later
             try{
                 const res = await axios.get('http://localhost:4000/api/browse/home');
 
                 setBooks(res.data);
-                setLoading(false);
                 //console.log("Books fetached", res.data);
             } catch(err){
                 console.error("Error fetching data:", err);
-                setLoading(false);
             }
         };
 
-        fetchBooksHome();
+        fetchBooks();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
-
     return (
-        <div>
-            <h1>Books</h1>
-            {books.map(book => (
-            <Link to={`/book/${book.isbn13}`} key={book._id}>
-            <div className="border rounded-lg p-4 shadow hover:shadow-lg transition cursor-pointer">
-              <h2 className="text-lg font-semibold">{book.title}</h2>
-              <p className="text-sm text-gray-700">By: {book.authors.join(', ')}</p>
+        <div className = "home-page"> 
+            <div className = "carousel-covers">
+                <Swiper spaceBetween={20} slidesPerView={1} loop={true}>
+                {books.map((book) => (
+                    <SwiperSlide key={book._id}>
+                    <img src={book.thumbnail} alt={book.title} className="book-cover" />
+                    </SwiperSlide>
+                ))}
+                </Swiper>
             </div>
-          </Link>
-            ))}
+            <div className="text-section">
+                <h1> All yout favorite books here</h1>
+                <button className="browse-button" onClick={() => navigate('/browse')}>Browse Now</button>
+            </div>
         </div>
-      );
 
+    )
 }
-
 export default Home;

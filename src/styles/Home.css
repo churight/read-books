@@ -1,0 +1,58 @@
+.home-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2rem;
+  background: #f2f2f2;
+  min-height: 100vh;
+  gap: 4rem;
+  flex-wrap: wrap;
+}
+
+.carousel-covers {
+  flex: 1;
+  max-width: 400px;
+}
+
+.book-cover {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  object-fit: contain;
+}
+
+.text-section {
+  flex: 1;
+  max-width: 500px;
+  text-align: left;
+}
+
+.text-section h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #111;
+  margin: 0;
+}
+
+.subtext {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: #555;
+}
+
+.browse-button {
+  margin-top: 1rem;
+  padding: 0.8rem 2rem;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.browse-button:hover {
+  background-color: #333;
+}
