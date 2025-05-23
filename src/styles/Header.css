@@ -1,60 +1,74 @@
-/* Header container */
 .header {
-  background-color: white;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-  padding: 12px 0;
-  font-family: sans-serif;
-    align-items: center;
+  background-color: #f4f4f4;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #ddd;
 }
 
-/* Flex layout and spacing */
 .header-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
   display: flex;
-  align-items: center;
-  justify-content: center; /* center horizontally */
-  border: 1px solid #e2e2e2;
-  border-radius: 9999px;
+  justify-content: flex-end;
 }
 
-
-/* Logo */
-.logo {
-  font-weight: bold;
-  font-size: 1.2rem;
-  text-decoration: none;
-  color: black;
-}
-
-/* Navigation links */
 .nav-links {
   display: flex;
-  gap: 24px;
+  gap: 1.5rem;
+  align-items: center;
+  position: relative;
 }
 
 .nav-links a {
   text-decoration: none;
-  color: #555;
+  color: #333;
   font-weight: 500;
 }
 
 .nav-links a:hover {
-  color: black;
+  text-decoration: underline;
 }
 
-/* Get Started button */
-.cta-button {
-  background-color: #2563eb; /* blue-600 */
-  color: white;
-  padding: 8px 16px;
-  border-radius: 9999px;
-  font-weight: 500;
+.profile-area {
+  position: relative;
+  cursor: pointer;
+}
+
+.profile-label {
+  font-weight: bold;
+  color: #333;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 2rem;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+}
+
+.user-info {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+  padding: 0.5rem 0;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #0074d9;
   text-decoration: none;
-  transition: background-color 0.3s;
+  cursor: pointer;
+  font-size: 0.95rem;
 }
 
-.cta-button:hover {
-  background-color: #1d4ed8; /* darker blue */
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+  text-decoration: underline;
 }

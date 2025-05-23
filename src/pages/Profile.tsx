@@ -2,9 +2,10 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../services/handleLogOut';
+import { logout } from '../services/logout';
 import { isAuthenticated } from '../services/isAuthenticated';
 import UserProfile from '../interfaces/IUserProfile';
+import handleLogout from '../services/handleLogout';
 
 interface FavouriteBooks{
     isbn13: string;
@@ -19,7 +20,7 @@ const Profile = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useEffect(() => { // here there is a problem with favourites, create hook specifically for them
     const fetchProfile = async () => {
       try {
         const auth = await isAuthenticated();
@@ -50,14 +51,6 @@ const Profile = () => {
     fetchProfile();
   }, [navigate]);
 
-  const handleLogout = async () => {
-    const success = await logout();
-    if (success) {
-      setUser(null);
-      navigate('/login');
-    }
-  };
-
   if (loading) return <div>Loading...</div>;
 
   // Show error if something went wrong
@@ -67,7 +60,7 @@ const Profile = () => {
     <div>
       <h1>Welcome {user?.nickname}</h1>
       <p>Email: {user?.email}</p>
-      <button onClick={handleLogout}>Log Out</button>
+      <button onClick={() => handleLogout(setUser, navigate)}>Log Out</button>
 
        <h2 style={{ marginTop: "30px" }}>Your Favourite Books</h2>
       {favourites.length === 0 ? (

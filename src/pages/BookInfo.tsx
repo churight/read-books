@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { handleAddFavourites } from "../services/handleAddFavourite";
 import useFavourites from "../hooks/useFavourites";
+import "../styles/BookInfo.css"
 const BookInfo =()=>{
     const [book, setBook] = useState<IBook | null>(null);
     const [loading, setLoading] = useState(true);
@@ -11,7 +12,7 @@ const BookInfo =()=>{
 
     const {favourites, addFavourite} = useFavourites();
 
-    useEffect(() =>{
+    useEffect(() =>{ // also in another file smotime later
         const fetchBook = async ()=>{
             try{
                 const res = await await axios.get(`http://localhost:4000/api/browse/book/${isbn13}`);
@@ -41,9 +42,9 @@ const BookInfo =()=>{
      const isFavourite = favourites.includes(String(book.isbn13));
 
     return (
-        <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
+        <div className="book-info-container">
             <h1>{book.title}</h1>
-            <img src={book.thumbnail} alt={book.title} style={{ width: "200px", height: "auto" }} />
+            <img className="book-thumbnail" src={book.thumbnail} alt={book.title} />
             <p><strong>Authors:</strong> {book.authors.join(", ")}</p>
             <p><strong>Categories:</strong> {book.categories.join(", ")}</p>
             <p><strong>Description:</strong> {book.description}</p>
@@ -54,7 +55,7 @@ const BookInfo =()=>{
             <p><strong>Average Rating:</strong> {book.average_rating}</p>
             <p><strong>Ratings Count:</strong> {book.ratings_count}</p>
              {isFavourite ? (
-                    <span style={{ fontWeight: "bold", color: "green" }}>Favourite</span>
+                    <span className="favourite-label">Favourite</span>
                 ) : (
                     <button onClick={handleClick}>Add to Favourite</button>
                 )}
