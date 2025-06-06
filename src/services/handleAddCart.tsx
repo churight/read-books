@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-export const handleAddFavourites = async (isbn13: string) => {
+export const handleAddCart = async (isbn13: string) => {
   try {
     const res = await axios.post(
-      'http://localhost:4000/api/browse/add/favourite',
+      'http://localhost:4000/api/browse/add/cart',
       { isbn13 },
       { withCredentials: true }
     );
@@ -12,7 +12,7 @@ export const handleAddFavourites = async (isbn13: string) => {
     if (err.response?.status === 401) {
       alert("Please log in");
     } else {
-      alert("Failed to add to favourites");
+      alert("Failed to add to cart");
     }
     console.error(err);
   }

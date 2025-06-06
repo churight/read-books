@@ -1,17 +1,17 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import { isAuthenticated } from "../services/isAuthenticated";
 import { useNavigate } from "react-router-dom";
 
 export function useFetchProfile (setUser: (user: any) => void){
-     const navigate = useNavigate();
-    //const [user, setUser] = useState<UserProfile | null>(null);
+    const navigate = useNavigate();
 
     useEffect(()=>{
         const fetchProfile = async () =>{
             try{
                 const auth = await isAuthenticated();
                 if (!auth) {
+                    setUser(null);
                     navigate('/login');
                     return;
                 }
@@ -20,7 +20,10 @@ export function useFetchProfile (setUser: (user: any) => void){
                 });
                 setUser(res.data);
                 console.log('Profile data:', res.data); // don't forget to delete later
-            }catch(err: any){console.error('Unauthorized')}
+            }catch(err: any){
+                console.error('Unauthorized');
+                setUser(null);
+            }
         };
 
         fetchProfile();

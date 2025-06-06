@@ -10,7 +10,7 @@ const BookInfo =()=>{
     const [loading, setLoading] = useState(true);
     const {isbn13} = useParams<{isbn13: string}>();
 
-    const {favourites, addFavourite} = useFavourites();
+    const {favourites, addFavourite, loadingFavourites} = useFavourites();
 
     useEffect(() =>{ // also in another file smotime later
         const fetchBook = async ()=>{
@@ -19,7 +19,7 @@ const BookInfo =()=>{
 
                 setBook(res.data);
                 setLoading(false);
-                console.log("Books fetached", res.data);
+                console.log("Books fetched", res.data);
             }catch(err){
                 console.error("Error fetching data:", err);
                 setLoading(false);
@@ -36,10 +36,10 @@ const BookInfo =()=>{
     addFavourite(String(book.isbn13)); // update local favourites state
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading || loadingFavourites) return <div>Loading...</div>;
     if (!book) return <div>Book not found</div>;
 
-     const isFavourite = favourites.includes(String(book.isbn13));
+    const isFavourite = favourites.includes(String(book.isbn13));
 
     return (
         <div className="book-info-container">

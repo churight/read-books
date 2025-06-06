@@ -9,12 +9,8 @@ const useFavourites = () => {
     const fetchFavourites = async () => {
       try {
         const res = await axios.get('http://localhost:4000/api/browse/favourites', { withCredentials: true });
-        // If API returns array of full book objects
-        const favBooks = Array.isArray(res.data.favouriteBooks)
-          ? res.data.favouriteBooks.map((book: any) => book.isbn13 ?? book)
-          : [];
-
-        setFavourites(favBooks);
+        const books = res.data.books;
+        setFavourites(res.data.books.map((book: any) => String(book.isbn13).trim()));
       } catch (err) {
         console.error('Failed to fetch favourites:', err);
       } finally {
@@ -32,7 +28,7 @@ const useFavourites = () => {
     });;
   };
 
-  return { favourites, loading, addFavourite };
+  return { favourites, loadingFavourites: loading, addFavourite };
 };
 
 export default useFavourites;

@@ -3,6 +3,7 @@ import { Book } from "../models/Books";
 import { protect } from "../middleware/authMiddleware";
 import { Favourite } from "../models/Favourite";
 import { AuthRequest } from "../models/AuthRequest";
+import { Cart } from "../models/Cart";
 
 const router: Router = express.Router();
 
@@ -56,7 +57,7 @@ router.get('/book/:isbn13', async (req, res): Promise<void> => {
 
 //add to favourites
 
-router.post('/add', protect, async (req: AuthRequest, res): Promise<void>=>{
+router.post('/add/favourite', protect, async (req: AuthRequest, res): Promise<void>=>{
     try {
         const userId = req.user.id;
         const { isbn13 } = req.body;
@@ -107,7 +108,7 @@ router.get('/favourites', protect, async(req: AuthRequest, res): Promise<void> =
 
         const books = await Book.find({isbn13: {$in: favourite.books_isbn13}})
             .select('isbn13 title authors -_id');
-        res.status(200).json({favouriteBooks: books});
+        res.status(200).json({books});
     }catch(error){
         console.error(error);
         res.status(500).json({ message: "Server error" });
@@ -142,4 +143,64 @@ router.get('/search', async (req, res): Promise<void> =>{
         res.status(500).json({ message: "Server error" })
     }
 })
+
+//adding to cart
+router.post('/add/cart', protect, async (req: AuthRequest, res): Promise<void>=>{
+    try {
+        const userId = req.user.id;
+        const { isbn13 } = req.body;
+
+        if (!isbn13) {
+            res.status(400).json({ message: "ISBN13 is required" });
+            return;
+        }
+
+        // Check if user already has a favourites document
+        let cart = await Cart.findOne({ user_id: userId });
+
+        if (!cart) {
+            // Create a new favourites document for the user
+            cart = new Cart({
+                user_id: userId,
+                books_isbn13: [isbn13],
+            });
+        } else {
+            // Avoid adding duplicates
+            if (!cart.books_isbn13.includes(isbn13)) {
+                cart.books_isbn13.push(isbn13);
+            } else {
+                res.status(409).json({ message: "Book already in cart" });
+                return;
+            }
+        }
+
+        await cart.save();
+        res.status(200).json({ message: "Book added to cart", cart });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+})
+
+router.get('/cart', protect, async (req: AuthRequest, res): Promise<void> =>{
+    try{
+        const userId = req.user.id;
+        
+        const cart = await Cart.findOne({user_id: userId});
+
+        if (!cart || cart.books_isbn13.length === 0){
+            res.status(200).json({cart: []});
+            return;
+        }
+
+        const books = await Book.find({isbn13: {$in: cart.books_isbn13}})
+            .select('isbn13 title authors -_id');
+        res.status(200).json({cart: books});
+    }catch(error){
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+})
+
 export default router;

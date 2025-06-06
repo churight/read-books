@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../services/logout';
 import { isAuthenticated } from '../services/isAuthenticated';
 import UserProfile from '../interfaces/IUserProfile';
 import handleLogout from '../services/handleLogout';

@@ -67,3 +67,19 @@
 .pagination-controls span {
   font-weight: bold;
 }
+
+.buy-now-button {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #235a95;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buy-now-button:hover {
+  background-color: #8eb2d9;
+}
