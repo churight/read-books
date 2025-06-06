@@ -4,6 +4,7 @@ import { protect } from "../middleware/authMiddleware";
 import { Favourite } from "../models/Favourite";
 import { AuthRequest } from "../models/AuthRequest";
 import { Cart } from "../models/Cart";
+import {verifyAndRefreshToken} from "../middleware/refreshToken"
 
 const router: Router = express.Router();
 
