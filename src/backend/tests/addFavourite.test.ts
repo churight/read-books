@@ -1,6 +1,7 @@
 import request from 'supertest'; //simulate http request
 import app from '../server';
 import { Favourite } from '../models/Favourite'; 
+import mongoose from 'mongoose';
 
 
 jest.mock('../models/Favourite');
@@ -60,4 +61,9 @@ describe('POST /add/favourite', () => {
     expect(response.status).toBe(500);
     expect(response.body.message).toBe('Server error');
   });
+
+  afterAll(async () => {
+  await mongoose.connection.close();
+});
+
 });
