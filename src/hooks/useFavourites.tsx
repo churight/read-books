@@ -10,7 +10,7 @@ const useFavourites = () => {
       try {
         const res = await axios.get('http://localhost:4000/api/browse/favourites', { withCredentials: true });
         const books = res.data.books;
-        setFavourites(res.data.books.map((book: any) => String(book.isbn13).trim()));
+        setFavourites(books.map((book: any) => String(book.isbn13).trim()));
       } catch (err) {
         console.error('Failed to fetch favourites:', err);
       } finally {

@@ -28,3 +28,28 @@ jobs:
         
       - name: Build frontend
         run: npm run build
+  
+  #test job
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Ckeckout code
+        run: actions/ckeckout@v3
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install Dependencies
+        run: |
+          npm install
+      - name: Install backend dependencies
+        working-directory: ./src/backend
+        run: |
+            npm install
+
+      - name: Run test backend
+        working-directory: ./src/backend
+        run: npm test --watchAll=false

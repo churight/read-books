@@ -38,3 +38,5 @@ app.listen(PORT, async () =>{
     console.log('Server running');
 
 });
+
+export default app;
