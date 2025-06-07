@@ -49,7 +49,12 @@ jobs:
         working-directory: ./src/backend
         run: |
             npm install
+            
+      - name: Rebuild bcrypt for current OS
+        working-directory: ./src/backend
+        run: |
+          npm rebuild bcrypt --update-binary
 
       - name: Run test backend
         working-directory: ./src/backend
-        run: npm test --watchAll=false
+        run: npm test -- --watchAll=false
