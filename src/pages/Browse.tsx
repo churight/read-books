@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import IBook from "../interfaces/IBook";
-import { Link, useParams } from "react-router-dom";
+import { Link} from "react-router-dom";
 import "../styles/Browse.css"
 //import { handleAddCart } from "../services/handleAddCart";
 
 const Browse = ()=>{
     const [books, setBooks] = useState<IBook[]>([]);
     const [loading, setLoading] = useState(true);
-    //const {isbn13} = useParams<{isbn13: string}>();
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
