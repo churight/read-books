@@ -57,4 +57,8 @@ jobs:
 
       - name: Run test backend
         working-directory: ./src/backend
+<<<<<<< HEAD
         run: npm test -- --watchAll=false
+=======
+        run: npm test --watchAll=false
+>>>>>>> 509f327ebc2dc9a80e5142385b19359a491d7a53
