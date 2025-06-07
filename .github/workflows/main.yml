@@ -57,4 +57,4 @@ jobs:
 
       - name: Run test backend
         working-directory: ./src/backend
-        run: npm test -- --watchAll=false
+        run: npm test -- --watchAll=false --detectOpenHandles
