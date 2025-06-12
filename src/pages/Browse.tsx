@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import IBook from "../interfaces/IBook";
 import { Link} from "react-router-dom";
 import "../styles/Browse.css"
-//import { handleAddCart } from "../services/handleAddCart";
 
 const Browse = ()=>{
     const [books, setBooks] = useState<IBook[]>([]);

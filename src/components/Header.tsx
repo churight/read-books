@@ -41,9 +41,10 @@ const Header = ()=>{
                                 <strong>{user.nickname}</strong>
                                 <small>{user.email}</small>
                                 </div>
-                                <Link to="/settings">Settings</Link>
+                                <Link to="/my-books">My Books</Link>
                                 <Link to="/favourites">Favourites</Link>
                                 <Link to="/cart">Cart</Link>
+                                <Link to="/settings">Settings</Link>
                                 <button onClick={handleLogout}>Log Out</button>
                             </div>
                             )}

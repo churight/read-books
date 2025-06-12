@@ -5,6 +5,7 @@ import { Favourite } from "../models/Favourite";
 import { AuthRequest } from "../models/AuthRequest";
 import { Cart } from "../models/Cart";
 import {verifyAndRefreshToken} from "../middleware/refreshToken"
+import { MyBooks } from "../models/MyBooks";
 
 const router: Router = express.Router();
 
@@ -146,9 +147,9 @@ router.get('/search', async (req, res): Promise<void> =>{
 })
 
 //adding to cart
-router.post('/add/cart', protect, async (req: AuthRequest, res): Promise<void>=>{
+router.post('/add/cart', protect, async (req: AuthRequest, res): Promise<void> => {
     try {
-        const userId = req.user.id;
+        const userId = req.user?.id;
         const { isbn13 } = req.body;
 
         if (!isbn13) {
@@ -156,39 +157,49 @@ router.post('/add/cart', protect, async (req: AuthRequest, res): Promise<void>=>
             return;
         }
 
-        // Check if user already has a favourites document
-        let cart = await Cart.findOne({ user_id: userId });
+        // Find active cart
+        let cart = await Cart.findOne({
+            user_id: userId,
+            status: "waiting for purchase"
+        });
 
-        if (!cart) {
-            // Create a new favourites document for the user
-            cart = new Cart({
-                user_id: userId,
-                books_isbn13: [isbn13],
-            });
-        } else {
-            // Avoid adding duplicates
-            if (!cart.books_isbn13.includes(isbn13)) {
-                cart.books_isbn13.push(isbn13);
-            } else {
-                res.status(409).json({ message: "Book already in cart" });
+        if (cart) {
+            if (cart.books_isbn13.includes(isbn13)) {
+                res.status(409).json({ message: 'Book already in cart' });
                 return;
             }
+            cart.books_isbn13.push(isbn13);
+        } else {
+            // Safely get last purchase_id
+            const lastCart = await Cart.findOne({}).sort({ purchase_id: -1 }).lean();
+            const nextPurchaseId = lastCart ? lastCart.purchase_id + 1 : 1;
+
+            cart = new Cart({
+                user_id: userId,
+                purchase_id: nextPurchaseId,
+                books_isbn13: [isbn13],
+                status: 'waiting for purchase',
+            });
         }
 
-        await cart.save();
-        res.status(200).json({ message: "Book added to cart", cart });
+        const savedCart = await cart.save();
+        res.status(200).json({ message: 'Book added to cart', cart: savedCart });
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error" });
+    } catch (error: any) {
+        console.error("Add to cart error:", error.message, error.stack);
+        res.status(500).json({ message: "Server error", error: error.message });
     }
-})
+});
+
 
 router.get('/cart', protect, async (req: AuthRequest, res): Promise<void> =>{
     try{
         const userId = req.user.id;
         
-        const cart = await Cart.findOne({user_id: userId});
+        const cart = await Cart.findOne({
+            user_id: userId, 
+            status: { $ne: "payed for" } // only show if not payed
+            }).sort({purchase_id: -1});
 
         if (!cart || cart.books_isbn13.length === 0){
             res.status(200).json({cart: []});
@@ -203,5 +214,48 @@ router.get('/cart', protect, async (req: AuthRequest, res): Promise<void> =>{
         res.status(500).json({ message: "Server error" });
     }
 })
+
+router.post('/cart/checkout', protect, async (req: AuthRequest, res):Promise<void>=>{
+    try{
+        const userId=req.user.id;
+
+        const cart = await Cart.findOne({
+                user_id: userId,
+                status: "waiting for purchase"
+            }).sort({purchase_id: -1})
+        
+        if (!cart||cart.books_isbn13.length===0||cart.status==="payed for"){
+            res.status(400).json({message:"cart is empty or payed for"});
+            return;
+        }
+
+        cart.status = "payed for";
+        await cart.save();
+
+        let myBooks = await MyBooks.findOne({user_id:userId});
+
+        if(!myBooks){
+            myBooks = new MyBooks({
+                user_id:userId,
+                books_isbn13:[...cart.books_isbn13],
+            });
+        }
+        else{
+            const newBooks = cart.books_isbn13.filter(
+                isbn => !myBooks?.books_isbn13.includes(isbn)
+            );
+
+            myBooks.books_isbn13.push(...newBooks);
+        }
+
+        await myBooks.save();
+
+        res.status(200).json({message: "Books moved to My Books"})
+    }catch(error){
+        console.error(error);
+        res.status(500)
+    }
+})
+
 
 export default router;

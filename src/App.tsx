@@ -9,6 +9,7 @@ import Browse from './pages/Browse';
 import BookInfo from './pages/BookInfo';
 import { Search } from './pages/Search';
 import Home from './pages/Home';
+import { CartPage } from './pages/Cart';
 
 function App() {
   return (
@@ -21,7 +22,8 @@ function App() {
         <Route path="/profile" element={<Profile />}/>
         <Route path="/browse" element={<Browse />}/>
         <Route path="/book/:isbn13" element={<BookInfo />} />
-        <Route path="search" element={<Search />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/cart" element={<CartPage />}/>
       </Routes>
     </Router>
   );

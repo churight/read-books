@@ -5,12 +5,15 @@ import axios from "axios";
 import { handleAddFavourites } from "../services/handleAddFavourite";
 import useFavourites from "../hooks/useFavourites";
 import "../styles/BookInfo.css"
+import { handleAddCart } from "../services/handleAddCart";
+import useCart from "../hooks/useCart";
 const BookInfo =()=>{
     const [book, setBook] = useState<IBook | null>(null);
     const [loading, setLoading] = useState(true);
     const {isbn13} = useParams<{isbn13: string}>();
 
     const {favourites, addFavourite, loadingFavourites} = useFavourites();
+    const {cart, addCart, loadingCart} = useCart();
 
     useEffect(() =>{ // also in another file smotime later
         const fetchBook = async ()=>{
@@ -30,16 +33,23 @@ const BookInfo =()=>{
 
     }, [isbn13]);
 
-    const handleClick = async () => {
+    const handleClickFavourite = async () => {
     if (!book) return;
     await handleAddFavourites(String(book.isbn13));
     addFavourite(String(book.isbn13)); // update local favourites state
     };
 
-    if (loading || loadingFavourites) return <div>Loading...</div>;
+    const handleClickCart = async () => {
+    if (!book) return;
+    await handleAddCart(String(book.isbn13));
+    addCart(String(book.isbn13)); // update local favourites state
+    };
+
+    if (loading || loadingFavourites || loadingCart) return <div>Loading...</div>;
     if (!book) return <div>Book not found</div>;
 
     const isFavourite = favourites.includes(String(book.isbn13));
+    const isCart = cart.includes(String(book.isbn13));
 
     return (
         <div className="book-info-container">
@@ -57,9 +67,15 @@ const BookInfo =()=>{
              {isFavourite ? (
                     <span className="favourite-label">Favourite</span>
                 ) : (
-                    <button onClick={handleClick}>Add to Favourite</button>
+                    <button onClick={handleClickFavourite}>Add to Favourite</button>
+                )}
+            {isCart ? (
+                    <span className="cart-label">Added to cart</span>
+                ) : (
+                    <button onClick={handleClickCart}>Add to cart</button>
                 )}
                 </div>
+
       );
 };
 
