@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../services/isAuthenticated';
 import UserProfile from '../interfaces/IUserProfile';
 import handleLogout from '../services/handleLogout';
+import { Link } from 'react-router-dom';
 
 interface FavouriteBooks{
     isbn13: string;
@@ -73,9 +74,12 @@ const Profile = () => {
       ) : (
         <ul>
           {favourites.map((book) => (
-            <li key={book.isbn13}>
-              <strong>{book.title}</strong> by {book.authors.join(', ')}
-            </li>
+            <Link to={`/book/${book.isbn13}`} key={book.isbn13} className="book-card">
+                <div className="book-details">
+                    <h2>{book.title}</h2>
+                    <p>By: {book.authors.join(', ')}</p>
+                </div>
+                </Link>
           ))}
         </ul>
       )}

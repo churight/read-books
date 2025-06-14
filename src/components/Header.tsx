@@ -91,8 +91,7 @@ const Header = ()=>{
                                 <small>{user.email}</small>
                                 </div>
                                 <Link to ="/profile">Profile Info</Link>
-                                <Link to="/my-books">My Books</Link>
-                                <Link to="/favourites">Favourites</Link>
+                                <Link to="/wishlist">Wish List</Link>
                                 <Link to="/cart">Cart</Link>
                                 <Link to="/settings">Settings</Link>
                                 <button onClick={handleLogout}>Log Out</button>

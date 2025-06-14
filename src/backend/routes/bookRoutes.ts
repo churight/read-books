@@ -6,6 +6,7 @@ import { AuthRequest } from "../models/AuthRequest";
 import { Cart } from "../models/Cart";
 import {verifyAndRefreshToken} from "../middleware/refreshToken"
 import { MyBooks } from "../models/MyBooks";
+import { WishList } from "../models/WishList";
 
 const router: Router = express.Router();
 
@@ -277,5 +278,61 @@ router.get('/my-books', protect, async(req: AuthRequest, res): Promise<void> =>{
     }
 })
 
+router.post('/add/wish-list', protect, async (req: AuthRequest, res): Promise<void>=>{
+    try {
+        const userId = req.user.id;
+        const { isbn13 } = req.body;
 
+        if (!isbn13) {
+            res.status(400).json({ message: "ISBN13 is required" });
+            return;
+        }
+
+        // Check if user already has a favourites document
+        let wishList = await WishList.findOne({ user_id: userId });
+
+        if (!wishList) {
+            // Create a new favourites document for the user
+            wishList = new WishList({
+                user_id: userId,
+                books_isbn13: [isbn13],
+            });
+        } else {
+            // Avoid adding duplicates
+            if (!wishList.books_isbn13.includes(isbn13)) {
+                wishList.books_isbn13.push(isbn13);
+            } else {
+                res.status(409).json({ message: "Book already in wish list" });
+                return;
+            }
+        }
+
+        await wishList.save();
+        res.status(200).json({ message: "Book added to wish list", wishList });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+})
+
+router.get('/wish-list', protect, async(req: AuthRequest, res): Promise<void> =>{
+    try{
+        const userId = req.user.id;
+        
+        const wishList = await WishList.findOne({user_id: userId});
+
+        if (!wishList || wishList.books_isbn13.length === 0){
+            res.status(200).json({wishList: []});
+            return;
+        }
+
+        const books = await Book.find({isbn13: {$in: wishList.books_isbn13}})
+            .select('isbn13 title authors -_id');
+        res.status(200).json({books});
+    }catch(error){
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+})
 export default router;

@@ -38,33 +38,33 @@ const Browse = ()=>{
             <h1>Books</h1>
 
             <div className="books-grid">
-                {books.map(book => (
-                    <Link to={`/book/${book.isbn13}`} key={book._id} className="book-card">
-                    <img src={book.thumbnail} alt={book.title} />
-                    <div className="book-details">
-                        <h2>{book.title}</h2>
-                        <p>By: {book.authors.join(', ')}</p>
-                    </div>
-                    </Link>
-                ))}
+            {books.map(book => (
+                <Link to={`/book/${book.isbn13}`} key={book._id} className="book-card">
+                <img src={book.thumbnail} alt={book.title} />
+                <div className="book-details">
+                    <h2>{book.title}</h2>
+                    <p>By: {book.authors.join(', ')}</p>
                 </div>
+                </Link>
+            ))}
+            </div>
 
-                <div className="pagination-controls">
-                <button
-                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                    disabled={currentPage === 1}
-                >
-                    Previous
-                </button>
+            <div className="pagination-controls">
+            <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+            >
+                Previous
+            </button>
 
-                <span>Page {currentPage} of {totalPages}</span>
+            <span>Page {currentPage} of {totalPages}</span>
 
-                <button
-                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                >
-                    Next
-                </button>
+            <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+            >
+                Next
+            </button>
              </div>
         </div>
       );

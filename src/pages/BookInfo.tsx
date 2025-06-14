@@ -7,6 +7,8 @@ import useFavourites from "../hooks/useFavourites";
 import "../styles/BookInfo.css"
 import { handleAddCart } from "../services/handleAddCart";
 import useCart from "../hooks/useCart";
+import { handleAddWishList } from "../services/handleAddWishList";
+import { useWishList } from "../hooks/useWishList";
 const BookInfo =()=>{
     const [book, setBook] = useState<IBook | null>(null);
     const [loading, setLoading] = useState(true);
@@ -14,6 +16,7 @@ const BookInfo =()=>{
 
     const {favourites, addFavourite, loadingFavourites} = useFavourites();
     const {cart, addCart, loadingCart} = useCart();
+    const {wishList, addWishList} = useWishList();
 
     useEffect(() =>{ // also in another file smotime later
         const fetchBook = async ()=>{
@@ -45,11 +48,19 @@ const BookInfo =()=>{
     addCart(String(book.isbn13)); // update local favourites state
     };
 
+    const handleClickWishList = async () =>{
+        if(!book) return;
+        await handleAddWishList(String(book.isbn13));
+        addWishList(String(book.isbn13));
+
+    }
+
     if (loading || loadingFavourites || loadingCart) return <div>Loading...</div>;
     if (!book) return <div>Book not found</div>;
 
     const isFavourite = favourites.includes(String(book.isbn13));
     const isCart = cart.includes(String(book.isbn13));
+    const isWishList = wishList.includes(String(book.isbn13));
 
     return (
         <div className="book-info-container">
@@ -74,7 +85,12 @@ const BookInfo =()=>{
                 ) : (
                     <button onClick={handleClickCart}>Add to cart</button>
                 )}
-                </div>
+            {isWishList ? (
+                    <span className="cart-label">Added to wish list</span>
+                ) : (
+                    <button onClick={handleClickWishList}>Add to wish list</button>
+                )}
+            </div>
 
       );
 };
