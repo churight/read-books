@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import IBook from "../interfaces/IBook"
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { handleCheckout } from "../services/handleCheckout";
 
 export const CartPage = () =>{
     const [books, setBooks] = useState<IBook[]>([]);
@@ -29,19 +30,10 @@ export const CartPage = () =>{
         fetchCart();
     }, []);
 
-    const handleCheckout = async () => {
-        try {
-            const res = await axios.post(`http://localhost:4000/api/browse/cart/checkout`, {}, { withCredentials: true });
-            setMessage(res.data.message);
-            setBooks([]);
-        } catch (err: any) {
-            if (err.response?.data?.message) {
-                setMessage(err.response.data.message);
-            } else {
-                console.error(err);
-                setMessage("An error occurred during checkout.");
-            }
-        }
+    const handleCheckoutClick = async () => {
+        const result = await handleCheckout();
+        setMessage(result.message);
+        setBooks(result.clearedBooks);
     };
 
     if (loading) return <div>Loading....</div>
@@ -62,7 +54,7 @@ export const CartPage = () =>{
                             </div>
                         </Link>
                     ))}
-                    <button onClick={handleCheckout}>Proceed to Payment</button>
+                    <button onClick={handleCheckoutClick}>Proceed to Payment</button>
                 </>
             )}
         </div>

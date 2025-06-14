@@ -15,11 +15,12 @@ interface FavouriteBooks{
 const Profile = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [favourites, setFavourites] = useState<FavouriteBooks[]>([]);
+  const [myBooks, setMyBooks] = useState<FavouriteBooks[]>([]); //for now, later change interface
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => { // here there is a problem with favourites, create hook specifically for them
+  useEffect(() => { // here there is a problem with favourites, create hook specifically for them, and honestly make it to the other file
     const fetchProfile = async () => {
       try {
         const auth = await isAuthenticated();
@@ -37,7 +38,12 @@ const Profile = () => {
         const favRes = await axios.get('http://localhost:4000/api/browse/favourites', {
           withCredentials: true
         });
-        setFavourites(favRes.data.favouriteBooks);
+        setFavourites(Array.isArray(favRes.data.books) ? favRes.data.books : []);
+
+        const myBooksRes = await axios.get('http://localhost:4000/api/browse/my-books', {
+          withCredentials: true
+        });
+        setMyBooks(Array.isArray(myBooksRes.data.books) ? myBooksRes.data.books : []);
       } catch (err: any) {
         console.error('Unauthorized or error fetching profile');
         //setError(err.response?.data?.message || 'Failed to load data');
@@ -67,6 +73,19 @@ const Profile = () => {
       ) : (
         <ul>
           {favourites.map((book) => (
+            <li key={book.isbn13}>
+              <strong>{book.title}</strong> by {book.authors.join(', ')}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h2 style={{ marginTop: "30px" }}>Your Books</h2>
+      {myBooks.length === 0 ? (
+        <p>You have no books.</p>
+      ) : (
+        <ul>
+          {myBooks.map((book) => (
             <li key={book.isbn13}>
               <strong>{book.title}</strong> by {book.authors.join(', ')}
             </li>

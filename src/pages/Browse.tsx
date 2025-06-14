@@ -3,6 +3,7 @@ import axios from "axios";
 import IBook from "../interfaces/IBook";
 import { Link} from "react-router-dom";
 import "../styles/Browse.css"
+import { handleAddCart } from "../services/handleAddCart";
 
 const Browse = ()=>{
     const [books, setBooks] = useState<IBook[]>([]);
@@ -28,11 +29,6 @@ const Browse = ()=>{
 
         fetchBooksHome();
     }, [currentPage]);
-
-    /*const handleClickAddCart = async () => {
-        if (!books) return;
-        await handleAddCart(String(books.isbn13));
-        };*/ //its a strat but thats not gonna work
     
 
     if (loading) return <div>Loading...</div>;
@@ -40,34 +36,35 @@ const Browse = ()=>{
     return (
         <div className="books-container">
             <h1>Books</h1>
-            {books.map(book => (
-            <Link to={`/book/${book.isbn13}`} key={book._id} className="book-card">
-                <img src={book.thumbnail} alt={book.title} />
-            <div className="book-details">
-                <h2 >{book.title}</h2>
-                <p>By: {book.authors.join(', ')}</p>
+
+            <div className="books-grid">
+                {books.map(book => (
+                    <Link to={`/book/${book.isbn13}`} key={book._id} className="book-card">
+                    <img src={book.thumbnail} alt={book.title} />
+                    <div className="book-details">
+                        <h2>{book.title}</h2>
+                        <p>By: {book.authors.join(', ')}</p>
+                    </div>
+                    </Link>
+                ))}
+                </div>
+
+                <div className="pagination-controls">
                 <button
-                className="buy-now-button"
-                onClick={(e) => {
-                e.preventDefault(); // prevent navigation to the book page
-                //window.open(book.buyLink, "_blank"); // assumes book has a buyLink field
-            }}
-          >
-            Buy Now
-          </button>
-            </div>
-          </Link>
-            ))}
-        <div className="pagination-controls">
-            <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
-                Previous
-            </button>
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                >
+                    Previous
+                </button>
 
-            <span>Page {currentPage} of {totalPages}</span>
+                <span>Page {currentPage} of {totalPages}</span>
 
-            <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
-                Next
-            </button>
+                <button
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                >
+                    Next
+                </button>
              </div>
         </div>
       );

@@ -22,7 +22,7 @@ router.get('/home', async (req, res) =>{ // need to rewrite it overall, cause so
 
 router.get('/browse', async (req, res) =>{
     const page = parseInt(req.query.page as string) || 1; // Default to page 1
-    const limit = 10;
+    const limit = 12;
     const skip = (page - 1) * limit;
 
     try{
@@ -254,6 +254,26 @@ router.post('/cart/checkout', protect, async (req: AuthRequest, res):Promise<voi
     }catch(error){
         console.error(error);
         res.status(500)
+    }
+});
+
+router.get('/my-books', protect, async(req: AuthRequest, res): Promise<void> =>{
+    try{
+        const userId = req.user.id;
+        
+        const my_books = await MyBooks.findOne({user_id: userId});
+
+        if (!my_books || my_books.books_isbn13.length === 0){
+            res.status(200).json({MyBooks: []});
+            return;
+        }
+
+        const books = await Book.find({isbn13: {$in: my_books.books_isbn13}})
+            .select('isbn13 title authors -_id');
+        res.status(200).json({books});
+    }catch(error){
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
     }
 })
 
