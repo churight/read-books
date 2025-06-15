@@ -1,13 +1,24 @@
 import mongoose, { Schema } from "mongoose";
 
-//the idea right now is to save it in different db and download reviews by book_id (maybe isbn13 if its even valid method, cause i need to do more research) 
-
-const ReviewSchema: Schema = new Schema({
-    book_id: String,
+export interface ReviewDocument extends Document {
     user_id: String,
+    book_isbn13: Number,
+    review: String,
     date: Date,
-    review_text: String
+    parentReviewId?: mongoose.Types.ObjectId | null
+}
+
+const ReviewSchema: Schema = new Schema <ReviewDocument>({
+    user_id: {type: String, required: true},
+    book_isbn13: {type: Number, required: true},
+    review: {type:String, required: true},
+    date: {type: Date, default: Date.now},
+    parentReviewId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review',
+        default: null,
+    }
 })
 
-const reviewDb=mongoose.connection.useDb('books-review-db');
-export const Review = reviewDb.model('Review', ReviewSchema)
+const reviewDb=mongoose.connection.useDb('book-reviews-db');
+export const Review = reviewDb.model('Reviews', ReviewSchema)

@@ -7,6 +7,8 @@ import { Cart } from "../models/Cart";
 import {verifyAndRefreshToken} from "../middleware/refreshToken"
 import { MyBooks } from "../models/MyBooks";
 import { WishList } from "../models/WishList";
+import { Review } from "../models/Review";
+import mongoose from "mongoose";
 
 const router: Router = express.Router();
 
@@ -333,6 +335,67 @@ router.get('/wish-list', protect, async(req: AuthRequest, res): Promise<void> =>
     }catch(error){
         console.error(error);
         res.status(500).json({ message: "Server error" });
+    }
+});
+
+//routes for posting/getting reviews
+
+router.post('/books/:isbn13/reviews', protect, async (req: AuthRequest, res): Promise<void> =>{
+    const {review, parentReviewId} = req.body;
+    const userId = req.user.id;
+
+    if (!review || typeof review !== 'string'){
+        res.status(400).json({message:'Review text is required'});
+        return;
+    }
+
+    try{
+        const newReview = new Review({
+            user_id: userId,
+            book_isbn13: parseInt(req.params.isbn13),
+            review: review,
+            parentReviewId: parentReviewId || null
+        });
+
+        await newReview.save();
+        res.status(201).json({message: 'Review posted'})
+        console.log('saved')
+    }catch(err){
+        console.error("Error saving review:", err);
+        res.status(500).json({message: 'Error saving review'})
+    }
+})
+
+
+//idk if its gonna work
+router.get('/books/:isbn13/reviews', protect, async (req: AuthRequest, res): Promise<void> =>{
+    const isbn13 = parseInt(req.params.isbn13);
+
+    try{
+        const allReviews = await Review.find({book_isbn13: isbn13}).lean();
+
+        console.log('Found reviews:', allReviews.length);
+
+        const topLevel = allReviews.filter(r => !r.parentReviewId);
+        const replies = allReviews.filter(r => r.parentReviewId);
+
+        const repliesMap = new Map<string, any[]>();
+        for (const reply of replies) {
+        const parentId = reply.parentReviewId?.toString();
+        if (!repliesMap.has(parentId)) repliesMap.set(parentId, []);
+        repliesMap.get(parentId)!.push(reply);
+        }
+
+        const reviewsWithReplies = topLevel.map(r => ({
+        ...r,
+        replies: repliesMap.get((r._id as mongoose.Types.ObjectId).toString()) || []
+        }));
+
+        res.json({ reviews: reviewsWithReplies });
+        console.log('displayed')
+    }catch(err){
+         console.error("Error getting review:", err);
+        res.status(500).json({message:'Error fetching', err})
     }
 })
 export default router;

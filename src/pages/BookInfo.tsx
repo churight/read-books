@@ -9,6 +9,7 @@ import { handleAddCart } from "../services/handleAddCart";
 import useCart from "../hooks/useCart";
 import { handleAddWishList } from "../services/handleAddWishList";
 import { useWishList } from "../hooks/useWishList";
+import { IReview } from "../interfaces/IReviews";
 const BookInfo =()=>{
     const [book, setBook] = useState<IBook | null>(null);
     const [loading, setLoading] = useState(true);
@@ -17,6 +18,9 @@ const BookInfo =()=>{
     const {favourites, addFavourite, loadingFavourites} = useFavourites();
     const {cart, addCart, loadingCart} = useCart();
     const {wishList, addWishList} = useWishList();
+
+    const [reviews, setReviews] = useState<IReview[]>([]);
+    const [newReview, setNewReview] = useState("");
 
     useEffect(() =>{ // also in another file smotime later
         const fetchBook = async ()=>{
@@ -36,6 +40,17 @@ const BookInfo =()=>{
 
     }, [isbn13]);
 
+    const fetchReviews = async () =>{
+            try{
+                const res = await axios.get(`http://localhost:4000/api/browse/books/${isbn13}/reviews`, {
+                    withCredentials:true
+                });
+                setReviews(res.data.reviews);
+            }catch(err){
+                console.error("Error fetching data:", err);
+            }
+        };
+
     const handleClickFavourite = async () => {
     if (!book) return;
     await handleAddFavourites(String(book.isbn13));
@@ -53,6 +68,20 @@ const BookInfo =()=>{
         await handleAddWishList(String(book.isbn13));
         addWishList(String(book.isbn13));
 
+    }
+
+    const handlePostReview = async () =>{
+        if(!newReview.trim()) return;
+        try{
+            await axios.post(`http://localhost:4000/api/browse/books/${isbn13}/reviews`, 
+                {review: newReview},
+                {withCredentials:true}
+            )
+            setNewReview("");
+            fetchReviews();
+        }catch(err){
+            console.error("Failed to post", err)
+        }
     }
 
     if (loading || loadingFavourites || loadingCart) return <div>Loading...</div>;
@@ -90,6 +119,38 @@ const BookInfo =()=>{
                 ) : (
                     <button onClick={handleClickWishList}>Add to wish list</button>
                 )}
+
+                <div className="reviews-section">
+                    <h2>Reviews</h2>
+                    <textarea
+                        value={newReview}
+                        onChange={(e) => setNewReview(e.target.value)}
+                        placeholder="Write your review..."
+                    />
+                    <button onClick={handlePostReview}>Post Review</button>
+
+                    {reviews.length === 0 ? (
+                        <p>No reviews yet.</p>
+                    ) : (
+                        <ul>
+                        {reviews.map((r) => (
+                            <li key={r._id}>
+                            <p><strong>User:</strong> {r.user_id}</p>
+                            <p>{r.review}</p>
+                            {r.replies && r.replies.length > 0 && (
+                                <ul>
+                                {r.replies.map((reply) => (
+                                    <li key={reply._id}>
+                                    <p><strong>Reply:</strong> {reply.review}</p>
+                                    </li>
+                                ))}
+                                </ul>
+                            )}
+                            </li>
+                        ))}
+                        </ul>
+                    )}
+                    </div>
             </div>
 
       );
