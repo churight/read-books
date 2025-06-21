@@ -15,10 +15,12 @@
     "ajv": "^8.17.1",
     "axios": "^1.9.0",
     "bcrypt": "^5.1.1",
+    "cloudinary": "^2.7.0",
     "dotenv": "^16.5.0",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.0",
+    "multer": "^2.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.5.3",
@@ -32,7 +34,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-
   },
   "eslintConfig": {
     "extends": [

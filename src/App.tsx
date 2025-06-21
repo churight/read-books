@@ -10,6 +10,7 @@ import BookInfo from './pages/BookInfo';
 import { Search } from './pages/Search';
 import Home from './pages/Home';
 import { CartPage } from './pages/Cart';
+import { Settings } from './pages/Settings';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/book/:isbn13" element={<BookInfo />} />
         <Route path="/search" element={<Search />} />
         <Route path="/cart" element={<CartPage />}/>
+        <Route path="/settings" element={<Settings />}/>
       </Routes>
     </Router>
   );

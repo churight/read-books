@@ -10,6 +10,7 @@ import useCart from "../hooks/useCart";
 import { handleAddWishList } from "../services/handleAddWishList";
 import { useWishList } from "../hooks/useWishList";
 import { IReview } from "../interfaces/IReviews";
+
 const BookInfo =()=>{
     const [book, setBook] = useState<IBook | null>(null);
     const [loading, setLoading] = useState(true);

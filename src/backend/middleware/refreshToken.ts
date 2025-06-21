@@ -10,11 +10,12 @@ interface JwtPayload {
   exp: number;
 }
 
-export const verifyAndRefreshToken = (req: Request, res:Response, next:NextFunction) =>{
+export const verifyAndRefreshToken = (req: Request, res:Response, next:NextFunction):void =>{
     const token = req.cookies?.token; //get token from cookies
 
     if(!token){
-        return res.status(401).json({message:'unauthorized'});
+        res.status(401).json({message:'unauthorized'});
+        return;
     }
 
     try{
@@ -38,7 +39,8 @@ export const verifyAndRefreshToken = (req: Request, res:Response, next:NextFunct
 
         next();
     }catch(err){
-        res.status(401).json({message: 'token verification failed'})
+        res.status(401).json({message: 'token verification failed'});
+        return;
     }
 
 }

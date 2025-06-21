@@ -62,7 +62,7 @@ router.get('/book/:isbn13', async (req, res): Promise<void> => {
 
 //add to favourites
 
-router.post('/add/favourite', protect, async (req: AuthRequest, res): Promise<void>=>{
+router.post('/add/favourite', protect, verifyAndRefreshToken, async (req: AuthRequest, res): Promise<void>=>{
     try {
         const userId = req.user.id;
         const { isbn13 } = req.body;
@@ -100,7 +100,7 @@ router.post('/add/favourite', protect, async (req: AuthRequest, res): Promise<vo
     }
 })
 
-router.get('/favourites', protect, async(req: AuthRequest, res): Promise<void> =>{
+router.get('/favourites', protect, verifyAndRefreshToken, async(req: AuthRequest, res): Promise<void> =>{
     try{
         const userId = req.user.id;
         
@@ -150,7 +150,7 @@ router.get('/search', async (req, res): Promise<void> =>{
 })
 
 //adding to cart
-router.post('/add/cart', protect, async (req: AuthRequest, res): Promise<void> => {
+router.post('/add/cart', protect, verifyAndRefreshToken, async (req: AuthRequest, res): Promise<void> => {
     try {
         const userId = req.user?.id;
         const { isbn13 } = req.body;
@@ -195,7 +195,7 @@ router.post('/add/cart', protect, async (req: AuthRequest, res): Promise<void> =
 });
 
 
-router.get('/cart', protect, async (req: AuthRequest, res): Promise<void> =>{
+router.get('/cart', protect, verifyAndRefreshToken, async (req: AuthRequest, res): Promise<void> =>{
     try{
         const userId = req.user.id;
         
@@ -218,7 +218,7 @@ router.get('/cart', protect, async (req: AuthRequest, res): Promise<void> =>{
     }
 })
 
-router.post('/cart/checkout', protect, async (req: AuthRequest, res):Promise<void>=>{
+router.post('/cart/checkout', protect, verifyAndRefreshToken, async (req: AuthRequest, res):Promise<void>=>{
     try{
         const userId=req.user.id;
 
@@ -260,7 +260,7 @@ router.post('/cart/checkout', protect, async (req: AuthRequest, res):Promise<voi
     }
 });
 
-router.get('/my-books', protect, async(req: AuthRequest, res): Promise<void> =>{
+router.get('/my-books', protect, verifyAndRefreshToken, async(req: AuthRequest, res): Promise<void> =>{
     try{
         const userId = req.user.id;
         
@@ -280,7 +280,7 @@ router.get('/my-books', protect, async(req: AuthRequest, res): Promise<void> =>{
     }
 })
 
-router.post('/add/wish-list', protect, async (req: AuthRequest, res): Promise<void>=>{
+router.post('/add/wish-list', protect, verifyAndRefreshToken, async (req: AuthRequest, res): Promise<void>=>{
     try {
         const userId = req.user.id;
         const { isbn13 } = req.body;
@@ -318,7 +318,7 @@ router.post('/add/wish-list', protect, async (req: AuthRequest, res): Promise<vo
     }
 })
 
-router.get('/wish-list', protect, async(req: AuthRequest, res): Promise<void> =>{
+router.get('/wish-list', protect, verifyAndRefreshToken, async(req: AuthRequest, res): Promise<void> =>{
     try{
         const userId = req.user.id;
         
@@ -340,7 +340,7 @@ router.get('/wish-list', protect, async(req: AuthRequest, res): Promise<void> =>
 
 //routes for posting/getting reviews
 
-router.post('/books/:isbn13/reviews', protect, async (req: AuthRequest, res): Promise<void> =>{
+router.post('/books/:isbn13/reviews', protect, verifyAndRefreshToken, async (req: AuthRequest, res): Promise<void> =>{
     const {review, parentReviewId} = req.body;
     const userId = req.user.id;
 
@@ -368,7 +368,7 @@ router.post('/books/:isbn13/reviews', protect, async (req: AuthRequest, res): Pr
 
 
 //idk if its gonna work
-router.get('/books/:isbn13/reviews', protect, async (req: AuthRequest, res): Promise<void> =>{
+router.get('/books/:isbn13/reviews', protect, verifyAndRefreshToken, async (req: AuthRequest, res): Promise<void> =>{
     const isbn13 = parseInt(req.params.isbn13);
 
     try{
