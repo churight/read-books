@@ -3,6 +3,9 @@ import { protect } from "../middleware/authMiddleware";
 import { AuthRequest } from "../models/AuthRequest";
 import { User } from "../models/User";
 import bcrypt from "bcrypt";
+import multer from 'multer';
+import {v2 as cloudinary} from "cloudinary";
+import streamifier from "streamifier";
 
 const router: Router = express.Router();
 
@@ -54,6 +57,35 @@ router.patch('/password', protect, async(req:AuthRequest, res):Promise<void> =>{
     }
 })
 
-//add/change profile picture
+//add/change profile picture, im gonna try to do it with cloudinary + multer 
+router.patch("/profile-picture", protect, async (req: AuthRequest, res):Promise<void> => {
+  const { profilePicture } = req.body;
+
+  if (!profilePicture || typeof profilePicture !== "string") {
+    res.status(400).json({ message: "Invalid or missing URL" });
+    return;
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { profilePicture },
+      { new: true }
+    );
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.json({
+      message: "Profile picture URL saved",
+      profilePicture: user.profilePicture,
+    });
+  } catch (err) {
+    console.error("Error saving profile picture URL:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 export default router;

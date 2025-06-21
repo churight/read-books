@@ -66,6 +66,7 @@ const Profile = () => {
     <div>
       <h1>Welcome {user?.nickname}</h1>
       <p>Email: {user?.email}</p>
+      
       <button onClick={() => handleLogout(setUser, navigate)}>Log Out</button>
 
        <h2 style={{ marginTop: "30px" }}>Your Favourite Books</h2>

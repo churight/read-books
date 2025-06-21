@@ -4,14 +4,14 @@ export interface IUser extends Document {
     nickname: string,
     email:string,
     password: string,
-    profilePictute?: string
+    profilePicture?: string
 }
 
 const UserSchema: Schema = new Schema<IUser>({
     nickname: {type:String, required: true},
     email: {type:String, required:true, unique:true},
     password: {type:String, required: true},
-    profilePictute:{type: String}
+    profilePicture:{type: String}
 })
 
 const authDb = mongoose.connection.useDb('auth_db');
