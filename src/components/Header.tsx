@@ -40,7 +40,7 @@ const Header = ()=>{
         <header className="header">
              <div className = "header-container">
                  <nav className="nav-links">
-                    <Link to ="/">
+                    <Link to ="/home">
                     Home
                     </Link>
                     <Link to="/browse">

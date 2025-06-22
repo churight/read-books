@@ -8,9 +8,10 @@ import Profile from './pages/Profile';
 import Browse from './pages/Browse';
 import BookInfo from './pages/BookInfo';
 import { Search } from './pages/Search';
-import Home from './pages/Home';
+import Home from './pages/Welcome';
 import { CartPage } from './pages/Cart';
 import { Settings } from './pages/Settings';
+import Recommendations from './pages/Home';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Header />
       <Routes>
         <Route path='/' element={<Home />}/>
+        <Route path='/home' element={<Recommendations/>}/>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />}/>
