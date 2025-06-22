@@ -4,6 +4,7 @@ import { protect } from "./middleware/authMiddleware";
 import authRoutes from "./routes/auth";
 import bookRoutes from "./routes/bookRoutes"
 import userRoutes from "./routes/userRoutes"
+import recomendationRoutes from "./routes/recomendationsRoutes";
 import cors from "cors";
 import cookieParser from "cookie-parser"
 
@@ -29,7 +30,8 @@ app.get('/', (req, res) =>{
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/browse', bookRoutes);
-app.use('/api/user', userRoutes)
+app.use('/api/user', userRoutes);
+app.use('/api/recommendations', recomendationRoutes);
 
 // Example of a protected route
 app.get('/api/protected', protect, (req, res) => {
