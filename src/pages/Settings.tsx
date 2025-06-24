@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react"
+import "../styles/Settings.css"
 
 export const Settings = () =>{
     const [nickname, setNickname] = useState('');
@@ -12,6 +13,8 @@ export const Settings = () =>{
     const [profileUrl, setProfileUrl] = useState('');
     const [message, setMessage] = useState('');
     const [previewUrl, setPreviewUrl] = useState('');
+
+    const [activeTab, setActiveTab] = useState<'profilePicture' | 'usernameChange' | 'passwordChange'>('profilePicture');
 
 
     const handleNicknameChange = async (e: React.FormEvent) =>{
@@ -58,63 +61,87 @@ export const Settings = () =>{
     };
 
     return (
-        <div style={{ maxWidth: 500, margin: '2rem auto' }}>
-      <h2>Settings</h2>
-        <form onSubmit={handleSaveUrl}>
-            <h3>Set Profile Picture URL</h3>
+        <div className="settings-container">
+      <div className="settings-sidebar">
+        <button
+          className={`settings-sidebar-button ${activeTab === 'profilePicture' ? 'settings-sidebar-button-active' : ''}`}
+          onClick={() => setActiveTab('profilePicture')}
+        >
+          Profile Picture
+        </button>
+        <button
+          className={`settings-sidebar-button ${activeTab === 'usernameChange' ? 'settings-sidebar-button-active' : ''}`}
+          onClick={() => setActiveTab('usernameChange')}
+        >
+          Username Change
+        </button>
+        <button
+          className={`settings-sidebar-button ${activeTab === 'passwordChange' ? 'settings-sidebar-button-active' : ''}`}
+          onClick={() => setActiveTab('passwordChange')}
+        >
+          Password Change
+        </button>
+      </div>
+      <div className="settings-main-content">
+        {activeTab === 'profilePicture' && (
+          <form onSubmit={handleSaveUrl} className="settings-form">
+            <h3 className="settings-subtitle">Set Profile Picture URL</h3>
             <input
-                type="url"
-                placeholder="Paste image URL"
-                value={profileUrl}
-                onChange={(e) => setProfileUrl(e.target.value)}
-                style={{ width: "100%", padding: "0.5rem", marginBottom: "1rem" }}
-                required
+              type="url"
+              placeholder="Paste image URL"
+              value={profileUrl}
+              onChange={(e) => setProfileUrl(e.target.value)}
+              className="settings-input"
+              required
             />
-            <button type="submit">Save</button>
-
+            <button type="submit" className="settings-button">Save</button>
             {previewUrl && (
-                <div style={{ marginTop: "1rem" }}>
-                <img src={previewUrl} alt="preview" width="150" />
-                </div>
+              <div className="settings-preview">
+                <img src={previewUrl} alt="preview" className="settings-preview-image" />
+              </div>
             )}
-
-            {message && <p>{message}</p>}
-        </form>
-      <form onSubmit={handleNicknameChange} style={{ marginBottom: '2rem' }}>
-        <h3>Change Nickname</h3>
-        <input
-          type="text"
-          placeholder="New nickname"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-          required
-          style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
-        />
-        <button type="submit">Update Nickname</button>
-        {nicknameMessage && <p>{nicknameMessage}</p>}
-      </form>
-
-      <form onSubmit={handlePasswordChange}>
-        <h3>Change Password</h3>
-        <input
-          type="password"
-          placeholder="Current password"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-          required
-          style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
-        />
-        <input
-          type="password"
-          placeholder="New password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-          style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
-        />
-        <button type="submit">Update Password</button>
-        {passwordMessage && <p>{passwordMessage}</p>}
-      </form>
+            {message && <p className="settings-message">{message}</p>}
+          </form>
+        )}
+        {activeTab === 'usernameChange' && (
+          <form onSubmit={handleNicknameChange} className="settings-form">
+            <h3 className="settings-subtitle">Change Nickname</h3>
+            <input
+              type="text"
+              placeholder="New nickname"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              required
+              className="settings-input"
+            />
+            <button type="submit" className="settings-button">Update Nickname</button>
+            {nicknameMessage && <p className="settings-message">{nicknameMessage}</p>}
+          </form>
+        )}
+        {activeTab === 'passwordChange' && (
+          <form onSubmit={handlePasswordChange} className="settings-form">
+            <h3 className="settings-subtitle">Change Password</h3>
+            <input
+              type="password"
+              placeholder="Current password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              required
+              className="settings-input"
+            />
+            <input
+              type="password"
+              placeholder="New password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+              className="settings-input"
+            />
+            <button type="submit" className="settings-button">Update Password</button>
+            {passwordMessage && <p className="settings-message">{passwordMessage}</p>}
+          </form>
+        )}
+      </div>
     </div>
     )
 }

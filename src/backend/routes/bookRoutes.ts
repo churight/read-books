@@ -25,7 +25,7 @@ router.get('/home', async (req, res) =>{ // need to rewrite it overall, cause so
 
 router.get('/browse', async (req, res) =>{
     const page = parseInt(req.query.page as string) || 1; // Default to page 1
-    const limit = 12;
+    const limit = 15;
     const skip = (page - 1) * limit;
 
     try{
@@ -210,7 +210,7 @@ router.get('/cart', protect, verifyAndRefreshToken, async (req: AuthRequest, res
         }
 
         const books = await Book.find({isbn13: {$in: cart.books_isbn13}})
-            .select('isbn13 title authors -_id');
+            .select('isbn13 title authors thumbnail description -_id');
         res.status(200).json({cart: books});
     }catch(error){
         console.error(error);

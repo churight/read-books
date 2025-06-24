@@ -4,7 +4,6 @@ import "swiper/css"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styles/Home.css"
 const Home = ()=> {
     const [books, setBooks] = useState<IBook[]>([]);
     const navigate = useNavigate()

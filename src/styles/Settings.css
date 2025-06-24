@@ -1,0 +1,100 @@
+.settings-container {
+  display: flex;
+  width: 90%;
+  max-width: 1200px;
+  margin: 60px auto 0;
+  padding: 2rem;
+  background: transparent;
+  box-shadow: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.settings-sidebar {
+  position: fixed; /* Changed to fixed instead of sticky */
+  left: 40px; /* Align to the left */
+  width: 250px;
+  padding-right: 1rem;
+  text-align: left;
+  border-radius: 5px;
+}
+
+.settings-sidebar-button {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: left;
+}
+
+.settings-sidebar-button-active {
+  background-color: #1a1a1a;
+  color: white;
+}
+
+.settings-sidebar-button:hover:not(.settings-sidebar-button-active) {
+  background-color: #d0d0d0;
+}
+
+.settings-main-content {
+  flex-grow: 1;
+  margin-left: 270px; /* Offset for sidebar width + padding */
+  padding-left: 2rem;
+  overflow-y: visible; /* Remove scrolling */
+}
+
+.settings-form {
+  margin-bottom: 2rem;
+}
+
+.settings-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.settings-input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.settings-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.settings-button:hover {
+  background-color: #333;
+}
+
+.settings-preview {
+  margin-top: 1rem;
+}
+
+.settings-preview-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.settings-message {
+  margin-top: 1rem;
+  color: #333;
+  font-size: 1rem;
+}
