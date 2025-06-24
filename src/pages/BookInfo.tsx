@@ -98,86 +98,88 @@ const BookInfo =()=>{
     const isWishList = wishList.includes(String(book.isbn13));
 
     return (
-    <div className="book-info-container">
-        <h1>{book.title}</h1>
-        <img className="book-thumbnail" src={book.thumbnail} alt={book.title} />
-        <p><strong>Authors:</strong> {book.authors.join(", ")}</p>
-        <p><strong>Categories:</strong> {book.categories.join(", ")}</p>
-        <p><strong>Description:</strong> {book.description}</p>
-        <p><strong>Published Year:</strong> {book.published_year}</p>
-        <p><strong>Pages:</strong> {book.num_pages}</p>
-        <p><strong>ISBN-13:</strong> {book.isbn13}</p>
-        <p><strong>ISBN-10:</strong> {book.isbn10}</p>
-        <p><strong>Average Rating:</strong> {book.average_rating}</p>
-        <p><strong>Ratings Count:</strong> {book.ratings_count}</p>
-
-        {isFavourite ? (
-            <span className="favourite-label">Favourite</span>
-        ) : (
-            <button onClick={handleClickFavourite}>Add to Favourite</button>
-        )}
-        {isCart ? (
-            <span className="cart-label">Added to cart</span>
-        ) : (
-            <button onClick={handleClickCart}>Add to cart</button>
-        )}
-        {isWishList ? (
-            <span className="cart-label">Added to wish list</span>
-        ) : (
-            <button onClick={handleClickWishList}>Add to wish list</button>
-        )}
-
-        <div className="reviews-section">
-            <h2>Reviews</h2>
-
-            {!replyTo && (
-                <>
-                    <textarea
-                        value={newReview}
-                        onChange={(e) => setNewReview(e.target.value)}
-                        placeholder="Write your review..."
-                    />
-                    <button onClick={handlePostReview}>Post Review</button>
-                </>
-            )}
-
-            {reviews.length === 0 ? (
-                <p>No reviews yet.</p>
-            ) : (
-                <ul>
-                    {reviews.map((r) => (
-                        <li key={r._id}>
-                            <p><strong>User:</strong> {r.user_id}</p>
-                            <p>{r.review}</p>
-
-                            <button onClick={() => setReplyTo(r._id)}>Reply</button>
-
-                            {replyTo === r._id && (
-                                <div style={{ marginTop: '0.5rem' }}>
-                                    <textarea
-                                        value={newReview}
-                                        onChange={(e) => setNewReview(e.target.value)}
-                                        placeholder="Write your reply..."
-                                    />
-                                    <button onClick={handlePostReview}>Post Reply</button>
-                                    <button onClick={() => { setReplyTo(null); setNewReview(''); }}>Cancel</button>
-                                </div>
-                            )}
-
-                            {r.replies && r.replies.length > 0 && (
-                                <ul>
-                                    {r.replies.map((reply) => (
-                                        <li key={reply._id}>
-                                            <p><strong>Reply:</strong> {reply.review}</p>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            )}
+     <div className="book-info-book-info-container">
+      <div className="book-info-book-details">
+        <div className="book-info-thumbnail-section">
+          <img className="book-info-book-thumbnail" src={book.thumbnail} alt={book.title} />
         </div>
+        <div className="book-info-info-section">
+          <h1>{book.title}</h1>
+          <p><strong>Author:</strong> {book.authors.join(", ")}</p>
+          <p><strong>Rating:</strong> {book.average_rating} ({book.ratings_count} ratings)</p>
+          <p><strong>Genre:</strong> {book.categories.join(", ")}</p>
+          <div className="book-info-additional-info">
+            <p><strong>Published Year:</strong> {book.published_year}</p>
+            <p><strong>Pages:</strong> {book.num_pages}</p>
+            <p><strong>ISBN-13:</strong> {book.isbn13}</p>
+            <p><strong>ISBN-10:</strong> {book.isbn10}</p>
+            <p><strong>Description:</strong> {book.description}</p>
+          </div>
+          <div className="book-info-action-buttons">
+            {isFavourite ? (
+              <span className="book-info-status-label">Favourite</span>
+            ) : (
+              <button onClick={handleClickFavourite} className="book-info-action-button">Add to Favourite</button>
+            )}
+            {isCart ? (
+              <span className="book-info-status-label">Added to Cart</span>
+            ) : (
+              <button onClick={handleClickCart} className="book-info-action-button">Add to Cart</button>
+            )}
+            {isWishList ? (
+              <span className="book-info-status-label">Added to Wish List</span>
+            ) : (
+              <button onClick={handleClickWishList} className="book-info-action-button">Add to Wish List</button>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="book-info-reviews-section">
+        <h2>Reviews</h2>
+        {!replyTo && (
+          <div className="book-info-review-input">
+            <textarea
+              value={newReview}
+              onChange={(e) => setNewReview(e.target.value)}
+              placeholder="Write your review..."
+            />
+            <button onClick={handlePostReview} className="book-info-action-button">Post Review</button>
+          </div>
+        )}
+        {reviews.length === 0 ? (
+          <p>No reviews yet.</p>
+        ) : (
+          <ul className="book-info-reviews-list">
+            {reviews.map((r) => (
+              <li key={r._id} className="book-info-review-item">
+                <p><strong>User:</strong> {r.user_id}</p>
+                <p>{r.review}</p>
+                <button onClick={() => setReplyTo(r._id)} className="book-info-reply-button">Reply</button>
+                {replyTo === r._id && (
+                  <div className="book-info-reply-input">
+                    <textarea
+                      value={newReview}
+                      onChange={(e) => setNewReview(e.target.value)}
+                      placeholder="Write your reply..."
+                    />
+                    <button onClick={handlePostReview} className="book-info-action-button">Post Reply</button>
+                    <button onClick={() => { setReplyTo(null); setNewReview(""); }} className="book-info-cancel-button">Cancel</button>
+                  </div>
+                )}
+                {r.replies && r.replies.length > 0 && (
+                  <ul className="book-info-replies-list">
+                    {r.replies.map((reply) => (
+                      <li key={reply._id} className="book-info-reply-item">
+                        <p><strong>Reply:</strong> {reply.review}</p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
 );
 }

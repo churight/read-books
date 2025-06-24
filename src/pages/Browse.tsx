@@ -33,41 +33,37 @@ const Browse = ()=>{
 
     if (loading) return <div>Loading...</div>;
 
-    return (
-        <div className="books-container">
-            <h1>Books</h1>
-
-            <div className="books-grid">
-            {books.map(book => (
-                <Link to={`/book/${book.isbn13}`} key={book._id} className="book-card">
-                <img src={book.thumbnail} alt={book.title} />
-                <div className="book-details">
-                    <h2>{book.title}</h2>
-                    <p>By: {book.authors.join(', ')}</p>
-                </div>
-                </Link>
-            ))}
+return (
+       <div className="browse-container">
+      <h1>Books</h1>
+      <div className="books-grid">
+        {books.map((book) => (
+          <Link to={`/book/${book.isbn13}`} key={book._id} className="book-card">
+            <img src={book.thumbnail} alt={book.title} className="book-thumbnail" />
+            <div className="book-details">
+              <h2>{book.title}</h2>
+              <p>By: {book.authors.join(", ")}</p>
             </div>
-
-            <div className="pagination-controls">
-            <button
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-            >
-                Previous
-            </button>
-
-            <span>Page {currentPage} of {totalPages}</span>
-
-            <button
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-            >
-                Next
-            </button>
-             </div>
-        </div>
-      );
+          </Link>
+        ))}
+      </div>
+      <div className="pagination-controls">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+    );
 
 }
 

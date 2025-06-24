@@ -2,11 +2,19 @@
   background-color: #f4f4f4;
   padding: 1rem 2rem;
   border-bottom: 1px solid #ddd;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header-container {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
 }
 
 .nav-links {
@@ -20,15 +28,22 @@
   text-decoration: none;
   color: #333;
   font-weight: 500;
+  padding: 0.5rem 1rem;
 }
 
 .nav-links a:hover {
   text-decoration: underline;
 }
 
+.nav-links a.active {
+  background-color: #e0e0e0;
+  border-radius: 5px;
+}
+
 .profile-area {
   position: relative;
   cursor: pointer;
+  margin-left: 1rem;
 }
 
 .profile-label {

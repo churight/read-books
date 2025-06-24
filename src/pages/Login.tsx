@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import "../styles/LoginAndRegister.css"
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -27,28 +28,34 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+   <div className="login-container">
+      <h2>Sign in with email</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="email"
           placeholder="Email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           required
-        /><br />
+        />
         <input
           type="password"
           placeholder="Password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           required
-        /><br />
-        <button type="submit">Login</button>
+        />
+        <a href="#" className="forgot-password">Forgot password?</a>
+        <button type="submit">Get Started</button>
       </form>
+      <div className="social-login">
+        <button><img src="google-icon.png" alt="Google" /></button>
+        <button><img src="facebook-icon.png" alt="Facebook" /></button>
+        <button><img src="apple-icon.png" alt="Apple" /></button>
+      </div>
       <p>{message}</p>
     </div>
-  );
+  )
 };
 
 export default Login;

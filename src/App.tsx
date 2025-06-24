@@ -16,19 +16,23 @@ import Recommendations from './pages/Home';
 function App() {
   return (
     <Router>
-      <Header />
-      <Routes>
-        <Route path='/' element={<Home />}/>
-        <Route path='/home' element={<Recommendations/>}/>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />}/>
-        <Route path="/browse" element={<Browse />}/>
-        <Route path="/book/:isbn13" element={<BookInfo />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/cart" element={<CartPage />}/>
-        <Route path="/settings" element={<Settings />}/>
-      </Routes>
+      <div className="app-container">
+        <Header />
+        <main className='content'>
+          <Routes>
+            <Route path='/' element={<Home />}/>
+            <Route path='/home' element={<Recommendations/>}/>
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />}/>
+            <Route path="/browse" element={<Browse />}/>
+            <Route path="/book/:isbn13" element={<BookInfo />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/cart" element={<CartPage />}/>
+            <Route path="/settings" element={<Settings />}/>
+          </Routes>
+        </main>
+      </div>
     </Router>
   );
 }
