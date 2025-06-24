@@ -6,11 +6,13 @@ import { isAuthenticated } from '../services/isAuthenticated';
 import UserProfile from '../interfaces/IUserProfile';
 import handleLogout from '../services/handleLogout';
 import { Link } from 'react-router-dom';
+import "../styles/Profile.css"
 
 interface FavouriteBooks{
     isbn13: string;
     title: string;
     authors: string[];
+    thumbnail: string
 }
 
 const Profile = () => {
@@ -20,6 +22,8 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const [activeTab, setActiveTab] = useState<'favourite' | 'myBooks'>('favourite');
 
   useEffect(() => { // here there is a problem with favourites, create hook specifically for them, and honestly make it to the other file
     const fetchProfile = async () => {
@@ -62,41 +66,57 @@ const Profile = () => {
   // Show error if something went wrong
   if (error) return <div>{error}</div>;
 
+  const currentBooks = activeTab === 'favourite' ? favourites : myBooks;
+
   return (
-    <div>
-      <h1>Welcome {user?.nickname}</h1>
-      <p>Email: {user?.email}</p>
-      
-      <button onClick={() => handleLogout(setUser, navigate)}>Log Out</button>
-
-       <h2 style={{ marginTop: "30px" }}>Your Favourite Books</h2>
-      {favourites.length === 0 ? (
-        <p>You have no favourite books.</p>
-      ) : (
-        <ul>
-          {favourites.map((book) => (
-            <Link to={`/book/${book.isbn13}`} key={book.isbn13} className="book-card">
-                <div className="book-details">
-                    <h2>{book.title}</h2>
-                    <p>By: {book.authors.join(', ')}</p>
-                </div>
+    <div className="profile-profile-container">
+      <div className="profile-sidebar">
+        <h1 className="profile-welcome">Welcome {user?.nickname}</h1>
+        {user?.profilePicture && (
+          <div className="profile-profile-picture-container">
+            <img
+              src={user.profilePicture}
+              alt="Profile"
+              className="profile-profile-picture"
+            />
+          </div>
+        )}
+        <p className="profile-email">Email: {user?.email}</p>
+        <button onClick={() => handleLogout(setUser, navigate)} className="profile-logout-button">Log Out</button>
+      </div>
+      <div className="profile-main-content">
+        <div className="profile-tabs">
+          <button
+            className={`profile-tab ${activeTab === 'favourite' ? 'profile-tab-active' : ''}`}
+            onClick={() => setActiveTab('favourite')}
+          >
+            Favourite
+          </button>
+          <button
+            className={`profile-tab ${activeTab === 'myBooks' ? 'profile-tab-active' : ''}`}
+            onClick={() => setActiveTab('myBooks')}
+          >
+            My Books
+          </button>
+        </div>
+        <div className="profile-books-section">
+          {currentBooks.length === 0 ? (
+            <p className="profile-no-books">You have no {activeTab === 'favourite' ? 'favourite books' : 'books'}.</p>
+          ) : (
+            <ul className="profile-books-list">
+              {currentBooks.map((book) => (
+                <Link to={`/book/${book.isbn13}`} key={book.isbn13} className="profile-book-card">
+                  <div className="profile-book-details">
+                    <img src={book.thumbnail} alt={book.title} className="profile-book-thumbnail" />
+                    <h2 className="profile-book-title">{book.title}</h2>
+                    <p className="profile-book-author">By: {book.authors.join(', ')}</p>
+                  </div>
                 </Link>
-          ))}
-        </ul>
-      )}
-
-      <h2 style={{ marginTop: "30px" }}>Your Books</h2>
-      {myBooks.length === 0 ? (
-        <p>You have no books.</p>
-      ) : (
-        <ul>
-          {myBooks.map((book) => (
-            <li key={book.isbn13}>
-              <strong>{book.title}</strong> by {book.authors.join(', ')}
-            </li>
-          ))}
-        </ul>
-      )}
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -112,7 +112,7 @@ router.get('/favourites', protect, verifyAndRefreshToken, async(req: AuthRequest
         }
 
         const books = await Book.find({isbn13: {$in: favourite.books_isbn13}})
-            .select('isbn13 title authors -_id');
+            .select('isbn13 title authors thumbnail -_id');
         res.status(200).json({books});
     }catch(error){
         console.error(error);
@@ -272,7 +272,7 @@ router.get('/my-books', protect, verifyAndRefreshToken, async(req: AuthRequest, 
         }
 
         const books = await Book.find({isbn13: {$in: my_books.books_isbn13}})
-            .select('isbn13 title authors -_id');
+            .select('isbn13 title authors thumbnail -_id');
         res.status(200).json({books});
     }catch(error){
         console.error(error);
