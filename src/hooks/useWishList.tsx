@@ -7,7 +7,7 @@ export const useWishList = () =>{
     useEffect(()=>{
         const fetchWishList = async () =>{
             try{
-                const res = await axios.get('http://localhost:4000/api/browse/wish-list');
+                const res = await axios.get('http://localhost:4000/api/browse/wish-list', {withCredentials: true});
                 setWishList(res.data.books.map((book:any) => String(book.isbn13).trim()));
             }catch(err){
                 console.error('Failed to fetch wish list:', err);

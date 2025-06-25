@@ -10,7 +10,8 @@ const useCart = () =>{
         const fetchCart = async () =>{
             try{
                 const res = await axios.get('http://localhost:4000/api/browse/cart', {withCredentials: true});
-                setCart(res.data.books.map((book:any) => String(book.isbn13).trim())); 
+                setCart(res.data.books.map((book:any) => String(book.isbn13).trim()));
+                setLoading(false);
             }catch(err){
                 console.error(err)
             }finally{

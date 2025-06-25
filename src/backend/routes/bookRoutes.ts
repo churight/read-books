@@ -160,6 +160,14 @@ router.post('/add/cart', protect, verifyAndRefreshToken, async (req: AuthRequest
             return;
         }
 
+        //if the books is in my-books it cannot be added to cart
+        const myBooks = await MyBooks.findOne({ user_id: userId });
+
+        if (myBooks && myBooks.books_isbn13.includes(isbn13)) {
+        res.status(409).json({ message: "Book already in your library (My Books)" });
+        return;
+        }
+
         // Find active cart
         let cart = await Cart.findOne({
             user_id: userId,
@@ -211,7 +219,7 @@ router.get('/cart', protect, verifyAndRefreshToken, async (req: AuthRequest, res
 
         const books = await Book.find({isbn13: {$in: cart.books_isbn13}})
             .select('isbn13 title authors thumbnail description -_id');
-        res.status(200).json({cart: books});
+        res.status(200).json({books});
     }catch(error){
         console.error(error);
         res.status(500).json({ message: "Server error" });
@@ -289,6 +297,13 @@ router.post('/add/wish-list', protect, verifyAndRefreshToken, async (req: AuthRe
             res.status(400).json({ message: "ISBN13 is required" });
             return;
         }
+        //if the books is in my-books it cannot be added to wish list
+        const myBooks = await MyBooks.findOne({ user_id: userId });
+
+        if (myBooks && myBooks.books_isbn13.includes(isbn13)) {
+        res.status(409).json({ message: "Book already in your library (My Books)" });
+        return;
+        }
 
         // Check if user already has a favourites document
         let wishList = await WishList.findOne({ user_id: userId });
@@ -318,25 +333,27 @@ router.post('/add/wish-list', protect, verifyAndRefreshToken, async (req: AuthRe
     }
 })
 
-router.get('/wish-list', protect, verifyAndRefreshToken, async(req: AuthRequest, res): Promise<void> =>{
-    try{
+router.get('/wish-list', protect, verifyAndRefreshToken, async (req: AuthRequest, res): Promise<void> => {
+    try {
         const userId = req.user.id;
-        
-        const wishList = await WishList.findOne({user_id: userId});
 
-        if (!wishList || wishList.books_isbn13.length === 0){
-            res.status(200).json({wishList: []});
+        const wishList = await WishList.findOne({ user_id: userId });
+
+        if (!wishList || wishList.books_isbn13.length === 0) {
+            res.status(200).json({ books: [] });
             return;
         }
 
-        const books = await Book.find({isbn13: {$in: wishList.books_isbn13}})
+        const books = await Book.find({ isbn13: { $in: wishList.books_isbn13 } })
             .select('isbn13 title authors thumbnail -_id');
-        res.status(200).json({books});
-    }catch(error){
+        
+        res.status(200).json({ books }); 
+    } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error" });
     }
 });
+
 
 //routes for posting/getting reviews
 

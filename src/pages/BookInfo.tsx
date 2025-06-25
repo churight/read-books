@@ -27,7 +27,7 @@ const BookInfo =()=>{
     useEffect(() =>{ // also in another file smotime later
         const fetchBook = async ()=>{
             try{
-                const res = await await axios.get(`http://localhost:4000/api/browse/book/${isbn13}`);
+                const res = await axios.get(`http://localhost:4000/api/browse/book/${isbn13}`);
 
                 setBook(res.data);
                 setLoading(false);
@@ -39,6 +39,7 @@ const BookInfo =()=>{
         };
 
         fetchBook();
+        fetchReviews();
 
     }, [isbn13]);
 
@@ -55,20 +56,32 @@ const BookInfo =()=>{
 
     const handleClickFavourite = async () => {
     if (!book) return;
-    await handleAddFavourites(String(book.isbn13));
-    addFavourite(String(book.isbn13)); // update local favourites state
+    try{
+      await handleAddFavourites(String(book.isbn13));
+      addFavourite(String(book.isbn13)); // update local favourites state
+    }catch(err){
+      console.error(err)
+    }
     };
 
     const handleClickCart = async () => {
     if (!book) return;
-    await handleAddCart(String(book.isbn13));
-    addCart(String(book.isbn13)); // update local favourites state
+    try{
+      await handleAddCart(String(book.isbn13));
+      addCart(String(book.isbn13)); // update local favourites state
+    }catch(err){
+      console.error(err)
+    }
     };
 
     const handleClickWishList = async () =>{
-        if(!book) return;
+      if(!book) return;
+      try{
         await handleAddWishList(String(book.isbn13));
         addWishList(String(book.isbn13));
+      }catch(err){
+        console.error(err)
+      }
 
     }
 
