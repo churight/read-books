@@ -330,7 +330,7 @@ router.get('/wish-list', protect, verifyAndRefreshToken, async(req: AuthRequest,
         }
 
         const books = await Book.find({isbn13: {$in: wishList.books_isbn13}})
-            .select('isbn13 title authors -_id');
+            .select('isbn13 title authors thumbnail -_id');
         res.status(200).json({books});
     }catch(error){
         console.error(error);

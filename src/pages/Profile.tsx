@@ -19,11 +19,12 @@ const Profile = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [favourites, setFavourites] = useState<FavouriteBooks[]>([]);
   const [myBooks, setMyBooks] = useState<FavouriteBooks[]>([]); //for now, later change interface
+  const [wishList, setWishList] = useState<FavouriteBooks[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<'favourite' | 'myBooks'>('favourite');
+  const [activeTab, setActiveTab] = useState<'favourite' | 'myBooks' |'wishlist'>('favourite');
 
   useEffect(() => { // here there is a problem with favourites, create hook specifically for them, and honestly make it to the other file
     const fetchProfile = async () => {
@@ -49,6 +50,10 @@ const Profile = () => {
           withCredentials: true
         });
         setMyBooks(Array.isArray(myBooksRes.data.books) ? myBooksRes.data.books : []);
+
+        const wishListRes = await axios.get('http://localhost:4000/api/browse/wish-list', {withCredentials: true});
+        setWishList(Array.isArray(wishListRes.data.books) ? wishListRes.data.books: [])
+
       } catch (err: any) {
         console.error('Unauthorized or error fetching profile');
         //setError(err.response?.data?.message || 'Failed to load data');
@@ -66,7 +71,7 @@ const Profile = () => {
   // Show error if something went wrong
   if (error) return <div>{error}</div>;
 
-  const currentBooks = activeTab === 'favourite' ? favourites : myBooks;
+  const currentBooks = activeTab === 'favourite' ? favourites : activeTab === 'myBooks' ? myBooks : wishList;
 
   return (
     <div className="profile-profile-container">
@@ -98,10 +103,16 @@ const Profile = () => {
           >
             My Books
           </button>
+          <button
+            className={`profile-tab ${activeTab === 'wishlist' ? 'profile-tab-active' : ''}`}
+            onClick={() => setActiveTab('wishlist')}
+          >
+            Wishlist
+          </button>
         </div>
         <div className="profile-books-section">
           {currentBooks.length === 0 ? (
-            <p className="profile-no-books">You have no {activeTab === 'favourite' ? 'favourite books' : 'books'}.</p>
+            <p className="profile-no-books">You have no {activeTab === 'favourite' ? 'favourite books' : activeTab === 'myBooks' ? 'books' : 'items in your wishlist'}.</p>
           ) : (
             <ul className="profile-books-list">
               {currentBooks.map((book) => (

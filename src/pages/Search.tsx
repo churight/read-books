@@ -1,72 +1,66 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import IBook from "../interfaces/IBook";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import "../styles/Browse.css"
+
+const useQueryParams =() =>{
+  return new URLSearchParams(useLocation().search);
+}
 
 export const Search = () =>{
-    const [query, setQuery] = useState('');
-    const [results, setResults] = useState<IBook[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState('');
+  const queryParams = useQueryParams();
+  const query = queryParams.get("query") || "";
+  const sortBy = queryParams.get("sortBy") || "";
+  const order = queryParams.get("order") || "asc";
 
-    const [sortBy, setSortBy] = useState('');
-    const [order, setOrder] = useState('asc');
+  const [results, setResults] = useState<IBook[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
-    const handleSearch = async (e: React.FormEvent) =>{
-        e.preventDefault();
-        if (!query.trim()) return;
+  useEffect(() =>{
+    const fetchResults = async () =>{
 
-        setLoading(true);
+      if(!query.trim()) return;
+      setLoading(true);
 
-        try{
-            const res = await axios.get('http://localhost:4000/api/browse/search', {params: {query, sortBy, order}});
-            setResults(res.data);
-            if(res.data.length === 0){
-                console.log('No books found');
-                setMessage('No books found');
-                setLoading(false);
-            }
-
-        }catch(e){
-            console.error('Search error', e);
-            setLoading(false);
-            setMessage('Search failed');
+      try{
+        const res = await axios.get(`http://localhost:4000/api/browse/search`, {
+          params: {query, sortBy, order}
+        });
+        setResults(res.data);
+        if(res.data.length === 0){
+          setMessage("No books found")
+        } else {
+          setMessage("")
         }
+      }catch(error){
+        console.error("Search error:", error);
+        setMessage("Search failed");
+        setLoading(false)
+      }
     }
 
-    if (loading) return <div>Loading...</div>;
+    fetchResults();
+  }, [query, sortBy, order])
 
-    return (
-    <div style={{ padding: '20px' }}>
-      <h2>Search for a Book</h2>
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          placeholder="Enter title, author or ISBN13"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-        <option value="">No Sort</option>
-        <option value="year">Year</option>
-        <option value="pages">Number of Pages</option>
-        <option value="rating">Average Rating</option>
-        </select>
-
-        <select value={order} onChange={(e) => setOrder(e.target.value)}>
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
-        </select>
-        <button type="submit">Search</button>
-      </form>
+    
+  return (
+    <div className="browse-container">
+      <h2>Search Results for "{query}"</h2>
       {message && <p>{message}</p>}
-
-      <ul>
+      <div className="books-grid">
         {results.map((book) => (
-          <li key={book.isbn13}>
-            <strong>{book.title}</strong> by {book.authors.join(', ')}
-          </li>
+          <Link to={`/book/${book.isbn13}`} key={book._id} className="book-card">
+            <img src={book.thumbnail} alt={book.title} className="book-thumbnail" />
+            <div className="book-details">
+              <h2>{book.title}</h2>
+              <p>By: {book.authors.join(", ")}</p>
+            </div>
+          </Link>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

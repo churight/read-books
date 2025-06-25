@@ -18,9 +18,6 @@ const Header = ()=>{
     const {
         query,
         setQuery,
-        results,
-        loading,
-        message,
         sortBy,
         setSortBy,
         order,
@@ -70,17 +67,6 @@ const Header = ()=>{
                             </select>
                             <button type="submit">Search</button>
                         </form>
-                        {loading && <p>Loading...</p>}
-                        {message && <p>{message}</p>}
-                        {results.length > 0 && (
-                            <ul className="search-results">
-                            {results.map((book) => (
-                                <li key={book.isbn13}>
-                                <strong>{book.title}</strong> by {book.authors.join(", ")}
-                                </li>
-                            ))}
-                            </ul>
-                        )}
                         </div>
                     )}
                     {user ? (<div className="profile-area" onMouseEnter={() => setShowMenu(true)} onMouseLeave={() => setShowMenu(false)}>
@@ -91,7 +77,6 @@ const Header = ()=>{
                                 <small>{user.email}</small>
                                 </div>
                                 <Link to ="/profile">Profile Info</Link>
-                                <Link to="/wishlist">Wish List</Link>
                                 <Link to="/cart">Cart</Link>
                                 <Link to="/settings">Settings</Link>
                                 <button onClick={handleLogout}>Log Out</button>
