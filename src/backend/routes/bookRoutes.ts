@@ -275,7 +275,7 @@ router.get('/my-books', protect, verifyAndRefreshToken, async(req: AuthRequest, 
         const my_books = await MyBooks.findOne({user_id: userId});
 
         if (!my_books || my_books.books_isbn13.length === 0){
-            res.status(200).json({MyBooks: []});
+            res.status(200).json({books: []});
             return;
         }
 
@@ -391,7 +391,7 @@ router.get('/books/:isbn13/reviews', protect, verifyAndRefreshToken, async (req:
     try{
         const allReviews = await Review.find({book_isbn13: isbn13}).lean();
 
-        console.log('Found reviews:', allReviews.length);
+        //console.log('Found reviews:', allReviews.length);
 
         const topLevel = allReviews.filter(r => !r.parentReviewId);
         const replies = allReviews.filter(r => r.parentReviewId);
@@ -409,7 +409,7 @@ router.get('/books/:isbn13/reviews', protect, verifyAndRefreshToken, async (req:
         }));
 
         res.json({ reviews: reviewsWithReplies });
-        console.log('displayed')
+        //console.log('displayed')
     }catch(err){
          console.error("Error getting review:", err);
         res.status(500).json({message:'Error fetching', err})

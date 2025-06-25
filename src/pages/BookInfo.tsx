@@ -10,6 +10,7 @@ import useCart from "../hooks/useCart";
 import { handleAddWishList } from "../services/handleAddWishList";
 import { useWishList } from "../hooks/useWishList";
 import { IReview } from "../interfaces/IReviews";
+import useMyBooks from "../hooks/useMyBooks";
 
 const BookInfo =()=>{
     const [book, setBook] = useState<IBook | null>(null);
@@ -23,6 +24,8 @@ const BookInfo =()=>{
     const [reviews, setReviews] = useState<IReview[]>([]);
     const [newReview, setNewReview] = useState("");
     const [replyTo, setReplyTo] = useState<string | null>(null);
+
+    const {myBooks, loadingMyBooks} = useMyBooks();
 
     useEffect(() =>{ // also in another file smotime later
         const fetchBook = async ()=>{
@@ -103,12 +106,14 @@ const BookInfo =()=>{
         }
     }
 
-    if (loading || loadingFavourites || loadingCart) return <div>Loading...</div>;
+    if (loading || loadingFavourites || loadingCart || loadingMyBooks) return <div>Loading...</div>;
     if (!book) return <div>Book not found</div>;
 
-    const isFavourite = favourites.includes(String(book.isbn13));
-    const isCart = cart.includes(String(book.isbn13));
-    const isWishList = wishList.includes(String(book.isbn13));
+    const currentIsbn = String(book.isbn13).trim();
+    const isFavourite = favourites.includes(currentIsbn);
+    const isCart = cart.includes(currentIsbn);
+    const isWishList = wishList.includes(currentIsbn);
+    const isOwned = myBooks.includes(currentIsbn);
 
     return (
      <div className="book-info-book-info-container">
@@ -130,19 +135,29 @@ const BookInfo =()=>{
           </div>
           <div className="book-info-action-buttons">
             {isFavourite ? (
-              <span className="book-info-status-label">Favourite</span>
-            ) : (
-              <button onClick={handleClickFavourite} className="book-info-action-button">Add to Favourite</button>
+                  <span className="book-info-status-label">Favourite</span>
+                ) : (
+                  <button onClick={handleClickFavourite} className="book-info-action-button">Add to Favourite</button>
+                )}
+
+           {!isOwned && (
+              <>
+                {isCart ? (
+                  <span className="book-info-status-label">Added to Cart</span>
+                ) : (
+                  <button onClick={handleClickCart} className="book-info-action-button">Add to Cart</button>
+                )}
+
+                {isWishList ? (
+                  <span className="book-info-status-label">Added to Wish List</span>
+                ) : (
+                  <button onClick={handleClickWishList} className="book-info-action-button">Add to Wish List</button>
+                )}
+              </>
             )}
-            {isCart ? (
-              <span className="book-info-status-label">Added to Cart</span>
-            ) : (
-              <button onClick={handleClickCart} className="book-info-action-button">Add to Cart</button>
-            )}
-            {isWishList ? (
-              <span className="book-info-status-label">Added to Wish List</span>
-            ) : (
-              <button onClick={handleClickWishList} className="book-info-action-button">Add to Wish List</button>
+
+            {isOwned && (
+              <span className="book-info-status-label">In Your Library</span>
             )}
           </div>
         </div>
