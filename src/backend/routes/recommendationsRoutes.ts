@@ -72,7 +72,7 @@ router.get('/highest-rating', protect, verifyAndRefreshToken, async(req: AuthReq
 
     try{
         const topRatingBooks = await Book.find({})
-        .sort({ratings_count: -1})
+        .sort({average_rating: -1})
         .limit(10)
         .select('isbn13 title authors thumbnail -_id');
 
@@ -89,7 +89,7 @@ router.get('/newest', protect, verifyAndRefreshToken, async(req: AuthRequest, re
 
     try{
         const newBooks = await Book.find({})
-        .sort({ratings_count: -1})
+        .sort({published_year: -1})
         .limit(10)
         .select('isbn13 title authors thumbnail -_id');
 

@@ -4,7 +4,7 @@ import "swiper/css"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const Home = ()=> {
+const Welcome = ()=> {
     const [books, setBooks] = useState<IBook[]>([]);
     const navigate = useNavigate()
 
@@ -42,4 +42,4 @@ const Home = ()=> {
 
     )
 }
-export default Home;
+export default Welcome;
