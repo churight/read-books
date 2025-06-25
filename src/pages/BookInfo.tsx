@@ -11,15 +11,17 @@ import { handleAddWishList } from "../services/handleAddWishList";
 import { useWishList } from "../hooks/useWishList";
 import { IReview } from "../interfaces/IReviews";
 import useMyBooks from "../hooks/useMyBooks";
+import { handleDeleteFavourite } from "../services/handleDeleteFavourite";
+import { handleDeleteWishList } from "../services/handleDeleteWishList";
 
 const BookInfo =()=>{
     const [book, setBook] = useState<IBook | null>(null);
     const [loading, setLoading] = useState(true);
     const {isbn13} = useParams<{isbn13: string}>();
 
-    const {favourites, addFavourite, loadingFavourites} = useFavourites();
+    const {favourites, addFavourite, removeFavourite, loadingFavourites} = useFavourites();
     const {cart, addCart, loadingCart} = useCart();
-    const {wishList, addWishList} = useWishList();
+    const {wishList, addWishList, removeWishList} = useWishList();
 
     const [reviews, setReviews] = useState<IReview[]>([]);
     const [newReview, setNewReview] = useState("");
@@ -88,6 +90,26 @@ const BookInfo =()=>{
 
     }
 
+    const handleDeleteFavouriteClick = async (isbn13:string) =>{
+      if (!book) return;
+        try {
+          await handleDeleteFavourite(String(book.isbn13));
+          removeFavourite(isbn13);
+        } catch (err) {
+          console.error(err);
+        }
+    }
+
+    const handleDeleteWishListClick = async (isbn13:string) =>{
+      if (!book) return;
+        try {
+          await handleDeleteWishList(String(book.isbn13));
+          removeWishList(isbn13);
+        } catch (err) {
+          console.error(err);
+        }
+    }
+
     const handlePostReview = async () =>{
         if(!newReview.trim()) return;
         try{
@@ -135,11 +157,20 @@ const BookInfo =()=>{
           </div>
           <div className="book-info-action-buttons">
             {isFavourite ? (
-                  <span className="book-info-status-label">Favourite</span>
-                ) : (
-                  <button onClick={handleClickFavourite} className="book-info-action-button">Add to Favourite</button>
-                )}
-
+              <button
+                onClick={() => handleDeleteFavouriteClick(currentIsbn)}
+                className="book-info-action-button remove-button"
+              >
+                Remove from Favourite
+              </button>
+            ) : (
+              <button
+                onClick={handleClickFavourite}
+                className="book-info-action-button"
+              >
+                Add to Favourite
+              </button>
+            )}
            {!isOwned && (
               <>
                 {isCart ? (
@@ -149,9 +180,16 @@ const BookInfo =()=>{
                 )}
 
                 {isWishList ? (
-                  <span className="book-info-status-label">Added to Wish List</span>
+                  <button
+                    onClick={() => handleDeleteWishListClick(String(book.isbn13))}
+                    className="book-info-action-button remove-button"
+                  >
+                    Remove from Wish List
+                  </button>
                 ) : (
-                  <button onClick={handleClickWishList} className="book-info-action-button">Add to Wish List</button>
+                  <button onClick={handleClickWishList} className="book-info-action-button">
+                    Add to Wish List
+                  </button>
                 )}
               </>
             )}

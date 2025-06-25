@@ -120,6 +120,39 @@ router.get('/favourites', protect, verifyAndRefreshToken, async(req: AuthRequest
     }
 })
 
+router.delete ('/delete/favourite', protect, verifyAndRefreshToken, async(req: AuthRequest, res):Promise<void> =>{
+    try{
+        const userId = req.user?.id;
+        const isbn13 = Number(req.query.isbn13);
+
+        if(!isbn13){
+            res.status(400).json({message: "isbn13 required"});
+            return;
+        }
+
+        const favourite = await Favourite.findOne({user_id: userId});
+
+        if(!favourite){
+            res.status(404).json({message: "Book not found"});
+            return;
+        }
+
+        const index = favourite.books_isbn13.indexOf(isbn13);
+        if (index === -1){
+            res.status(404).json({message: "Book not found"});
+            return;
+        }
+
+        favourite.books_isbn13.splice(index, 1);
+        await favourite.save();
+
+        res.status(200).json({ message: "Book removed from favourite", favourite });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({message: "Server error"})
+    }
+})
+
 router.get('/search', async (req, res): Promise<void> =>{
     const {query, sortBy, order} = req.query;
     //console.log('Received query:', query);
@@ -236,6 +269,38 @@ router.get('/wish-list', protect, verifyAndRefreshToken, async (req: AuthRequest
     }
 });
 
+router.delete ('/delete/wish-list', protect, verifyAndRefreshToken, async(req: AuthRequest, res):Promise<void> =>{
+    try{
+        const userId = req.user?.id;
+        const isbn13 = Number(req.query.isbn13);
+
+        if(!isbn13){
+            res.status(400).json({message: "isbn13 required"});
+            return;
+        }
+
+        const wishList = await WishList.findOne({user_id: userId});
+
+        if(!wishList){
+            res.status(404).json({message: "Book not found"});
+            return;
+        }
+
+        const index = wishList.books_isbn13.indexOf(isbn13);
+        if (index === -1){
+            res.status(404).json({message: "Book not found"});
+            return;
+        }
+
+        wishList.books_isbn13.splice(index, 1);
+        await wishList.save();
+
+        res.status(200).json({ message: "Book removed from wish list", wishList });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({message: "Server error"})
+    }
+})
 
 //routes for posting/getting reviews
 

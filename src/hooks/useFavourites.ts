@@ -28,7 +28,12 @@ const useFavourites = () => {
     });;
   };
 
-  return { favourites, loadingFavourites: loading, addFavourite };
+  const removeFavourite = (isbn13: string) => {
+    setFavourites((prev) => prev.filter((id) => id !== isbn13));
+  };
+
+
+  return { favourites, loadingFavourites: loading, addFavourite, removeFavourite };
 };
 
 export default useFavourites;

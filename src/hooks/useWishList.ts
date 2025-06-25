@@ -24,5 +24,10 @@ export const useWishList = () =>{
         });;
     };
 
-    return {wishList, addWishList}
+    const removeWishList = (isbn13: string) => {
+    setWishList((prev) => prev.filter((id) => id !== isbn13));
+  };
+
+
+    return {wishList, addWishList, removeWishList}
 }
