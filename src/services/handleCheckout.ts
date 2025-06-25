@@ -8,7 +8,7 @@ interface CheckoutResult {
 
 export const handleCheckout = async (): Promise<CheckoutResult> => {
   try {
-    const res = await axios.post(`http://localhost:4000/api/browse/cart/checkout`, {}, { withCredentials: true });
+    const res = await axios.post(`http://localhost:4000/api/buy/cart/checkout`, {}, { withCredentials: true });
 
     return {
       message: res.data.message,

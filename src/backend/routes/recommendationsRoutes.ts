@@ -50,7 +50,55 @@ router.get('/recommended', protect, verifyAndRefreshToken, async(req:AuthRequest
         console.error(err);
         res.status(500).json({message: "Server error"})
     }
+});
 
+//get most viewed books
+router.get('/popular', protect, verifyAndRefreshToken, async(req: AuthRequest, res):Promise<void> =>{
+    try{
+        const topBooks = await Book.find({})
+        .sort({ratings_count: -1})
+        .limit(10)
+        .select('isbn13 title authors thumbnail -_id');
+
+        res.status(200).json({ books: topBooks });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({message: "Server error"})
+    }
+})
+
+//get books with highest rating
+router.get('/highest-rating', protect, verifyAndRefreshToken, async(req: AuthRequest, res):Promise<void> =>{
+
+    try{
+        const topRatingBooks = await Book.find({})
+        .sort({ratings_count: -1})
+        .limit(10)
+        .select('isbn13 title authors thumbnail -_id');
+
+        res.status(200).json({ books: topRatingBooks });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({message: "Server error"})
+    }
     
 })
+
+//get newest
+router.get('/newest', protect, verifyAndRefreshToken, async(req: AuthRequest, res):Promise<void> =>{
+
+    try{
+        const newBooks = await Book.find({})
+        .sort({ratings_count: -1})
+        .limit(10)
+        .select('isbn13 title authors thumbnail -_id');
+
+        res.status(200).json({ books: newBooks });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({message: "Server error"})
+    }
+    
+})
+
 export default router;

@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth";
 import bookRoutes from "./routes/bookRoutes"
 import userRoutes from "./routes/userRoutes"
 import recommendationRoutes from "./routes/recommendationsRoutes";
+import cartRoutes from "./routes/cartRoutes";
 import cors from "cors";
 import cookieParser from "cookie-parser"
 
@@ -32,6 +33,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/browse', bookRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/recommendations', recommendationRoutes);
+app.use('/api/buy', cartRoutes)
 
 // Example of a protected route
 app.get('/api/protected', protect, (req, res) => {

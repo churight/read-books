@@ -4,6 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { handleCheckout } from "../services/handleCheckout";
 import "../styles/Cart.css"
+import { handleDeleteFromCart } from "../services/handleRemoveFromCart";
 
 export const CartPage = () =>{
     const [books, setBooks] = useState<IBook[]>([]);
@@ -13,10 +14,10 @@ export const CartPage = () =>{
     useEffect(()=>{
         const fetchCart = async ()=>{
             try{
-                const res = await axios.get(`http://localhost:4000/api/browse/cart`, {withCredentials: true});
+                const res = await axios.get(`http://localhost:4000/api/buy/cart`, {withCredentials: true});
 
-                if (Array.isArray(res.data.cart)) {
-                    setBooks(res.data.cart);
+                if (Array.isArray(res.data.books)) {
+                    setBooks(res.data.books);
                 } else {
                     console.warn("Unexpected cart format", res.data);
                     setBooks([]);
@@ -30,6 +31,15 @@ export const CartPage = () =>{
 
         fetchCart();
     }, []);
+
+    const handleRemoveClick = async (isbn13:string) =>{
+        const result = await handleDeleteFromCart(isbn13);
+        setMessage(result.message);
+
+        if (result.success) {
+            setBooks((prev) => prev.filter((b) => String(b.isbn13) !== isbn13));
+        }
+    }
 
     const handleCheckoutClick = async () => {
         const result = await handleCheckout();
@@ -48,18 +58,26 @@ export const CartPage = () =>{
             <>
             <div className="cart-books-list">
                 {books.map((book) => (
-                <Link to={`/book/${book.isbn13}`} key={book.isbn13} className="cart-book-card">
-                    <div className="cart-book-thumbnail-container">
-                    <img src={book.thumbnail} alt={book.title} className="cart-book-thumbnail" />
+                    <div key={book.isbn13} className="cart-book-card">
+                    <Link to={`/book/${String(book.isbn13)}`} className="cart-book-link">
+                        <div className="cart-book-thumbnail-container">
+                        <img src={book.thumbnail} alt={book.title} className="cart-book-thumbnail" />
+                        </div>
+                        <div className="cart-book-details">
+                        <h2 className="cart-book-title">{book.title}</h2>
+                        <p className="cart-book-author">By: {book.authors.join(", ")}</p>
+                        <p className="cart-book-description">{book.description || "No description available"}</p>
+                        </div>
+                    </Link>
+                    <button
+                        className="cart-remove-button"
+                        onClick={() => handleRemoveClick(String(book.isbn13))}
+                    >
+                        Remove
+                    </button>
                     </div>
-                    <div className="cart-book-details">
-                    <h2 className="cart-book-title">{book.title}</h2>
-                    <p className="cart-book-author">By: {book.authors.join(", ")}</p>
-                    <p className="cart-book-description">{book.description || "No description available"}</p>
-                    </div>
-                </Link>
                 ))}
-            </div>
+                </div>
             <button onClick={handleCheckoutClick} className="cart-checkout-button">
                 Proceed to Payment
             </button>

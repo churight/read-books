@@ -3,7 +3,7 @@ import axios from 'axios';
 export const handleAddCart = async (isbn13: string) => {
   try {
     const res = await axios.post(
-      'http://localhost:4000/api/browse/add/cart',
+      'http://localhost:4000/api/buy/add/cart',
       { isbn13 },
       { withCredentials: true }
     );
