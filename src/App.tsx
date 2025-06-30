@@ -1,17 +1,17 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import Register from './pages/Register';
-import Login from './pages/Login';
-import Header from './components/Header'; // make sure this path is correct
-import Profile from './pages/Profile';
-import Browse from './pages/Browse';
-import BookInfo from './pages/BookInfo';
-import { Search } from './pages/Search';
-import Welcome from './pages/Welcome';
-import { CartPage } from './pages/Cart';
-import { Settings } from './pages/Settings';
-import Home from './pages/Home';
+import Register from './frontend/pages/Register';
+import Login from './frontend/pages/Login';
+import Header from './frontend/components/Header'; 
+import Profile from './frontend/pages/Profile';
+import Browse from './frontend/pages/Browse';
+import BookInfo from './frontend/pages/BookInfo';
+import Welcome from './frontend/pages/Welcome';
+import Home from './frontend/pages/Home';
+import { Search } from './frontend/pages/Search';
+import { CartPage } from './frontend/pages/Cart';
+import { Settings } from './frontend/pages/Settings';
 
 function App() {
   return (
