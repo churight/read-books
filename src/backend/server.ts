@@ -8,6 +8,7 @@ import recommendationRoutes from "./routes/recommendationsRoutes";
 import cartRoutes from "./routes/cartRoutes";
 import cors from "cors";
 import cookieParser from "cookie-parser"
+import path from "path";
 
 const app=express();
 const PORT=4000;
@@ -44,5 +45,11 @@ app.listen(PORT, async () =>{
     console.log('Server running');
 
 });
+
+/*app.use(express.static(path.join(__dirname, '../public')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../public', 'index.html'));
+});*/
 
 export default app;

@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import { protect } from "../middleware/authMiddleware";
+import {OAuth2Client} from 'google-auth-library';
 
 dotenv.config();
 
@@ -111,6 +112,58 @@ router.post('/logout', async(req: Request, res: Response): Promise<void> =>{
 
     }catch(e){
         res.status(500).json({message:"Server error", e})
+    }
+});
+
+//google auth
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+router.post('/google-login', async(req: Request, res:Response):Promise<void> =>{
+    const {token} = req.body;
+
+    try{
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        if(!payload){
+            res.status(400).json({message: "Invalid google token"});
+            return;
+        }
+
+        const {email, name, picture} = payload;
+
+        let user = await User.findOne({email});
+
+        //autoregister if user not found
+        if(!user){
+            user = new User({
+                email,
+                nickname: name,
+                password: '',
+                profilePicture: picture,
+                provider: 'google',
+            });
+            await user.save();
+        }
+
+        const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, {
+            expiresIn: '1h',
+            });
+
+        res.cookie('token', jwtToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 3600000, // 1 hour
+        });
+
+        res.json({ message: 'Google login successful' });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({message: "server error"})
     }
 })
 

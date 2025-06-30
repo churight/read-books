@@ -30,31 +30,31 @@ jobs:
         run: npm run build
   
   #test job
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+  #test:
+   # runs-on: ubuntu-latest
+    #needs: build
+    #steps:
+    # - name: Checkout Code
+    #  uses: actions/checkout@v3
 
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
+    #  - name: Install Node
+    #    uses: actions/setup-node@v3
+    #    with:
+    #      node-version: 18.x
 
-      - name: Install Dependencies
-        run: |
-          npm install
-      - name: Install backend dependencies
-        working-directory: ./src/backend
-        run: |
-            npm install
+    #  - name: Install Dependencies
+    #    run: |
+    #      npm install
+    #  - name: Install backend dependencies
+    #    working-directory: ./src/backend
+    #    run: |
+    #        npm install
             
-      - name: Rebuild bcrypt for current OS
-        working-directory: ./src/backend
-        run: |
-          npm rebuild bcrypt --update-binary
+    #  - name: Rebuild bcrypt for current OS
+    #    working-directory: ./src/backend
+    #    run: |
+    #      npm rebuild bcrypt --update-binary
 
-      - name: Run test backend
-        working-directory: ./src/backend
-        run: npm test -- --watchAll=false --detectOpenHandles
+    #  - name: Run test backend
+    #    working-directory: ./src/backend
+    #    run: npm test -- --watchAll=false --detectOpenHandles

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import "../styles/LoginAndRegister.css"
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -27,6 +28,24 @@ const Login = () => {
     }
   };
 
+  const handleGoogleLoginSuccess = async (credentialResponse: any) => {
+    try {
+      const res = await axios.post('http://localhost:4000/api/auth/google-login', {
+        token: credentialResponse.credential,
+      }, {
+        withCredentials: true,
+      });
+      setMessage('Google login successful');
+      navigate('/browse');
+    } catch (err: any) {
+      setMessage(err.response?.data?.message || 'Google login failed');
+    }
+  };
+
+  const handleGoogleLoginError = () => {
+    setMessage('Google login failed');
+  };
+
   return (
    <div className="login-container">
       <h2>Sign in with email</h2>
@@ -49,9 +68,14 @@ const Login = () => {
         <button type="submit">Get Started</button>
       </form>
       <div className="social-login">
-        <button><img src="google-icon.png" alt="Google" /></button>
-        <button><img src="facebook-icon.png" alt="Facebook" /></button>
-        <button><img src="apple-icon.png" alt="Apple" /></button>
+        <div className="social-login">
+        <GoogleOAuthProvider clientId="66404395002-uhm6l689hlrqp8qeaa7nokav6qd6kn0t.apps.googleusercontent.com">
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={handleGoogleLoginError}
+          />
+        </GoogleOAuthProvider>
+      </div>
       </div>
       <p>{message}</p>
     </div>
