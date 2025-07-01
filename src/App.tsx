@@ -12,26 +12,29 @@ import Home from './frontend/pages/Home';
 import { Search } from './frontend/pages/Search';
 import { CartPage } from './frontend/pages/Cart';
 import { Settings } from './frontend/pages/Settings';
+import { AuthProvider } from './frontend/context/AuthContext';
 
 function App() {
   return (
     <Router>
       <div className="app-container">
-        <Header />
-        <main className='content'>
-          <Routes>
-            <Route path='/' element={<Welcome />}/>
-            <Route path='/home' element={<Home/>}/>
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />}/>
-            <Route path="/browse" element={<Browse />}/>
-            <Route path="/book/:isbn13" element={<BookInfo />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/cart" element={<CartPage />}/>
-            <Route path="/settings" element={<Settings />}/>
-          </Routes>
-        </main>
+        <AuthProvider>\
+          <Header />
+          <main className='content'>
+            <Routes>
+              <Route path='/' element={<Welcome />}/>
+              <Route path='/home' element={<Home/>}/>
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/profile" element={<Profile />}/>
+              <Route path="/browse" element={<Browse />}/>
+              <Route path="/book/:isbn13" element={<BookInfo />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/cart" element={<CartPage />}/>
+              <Route path="/settings" element={<Settings />}/>
+            </Routes>
+          </main>
+        </AuthProvider>
       </div>
     </Router>
   );

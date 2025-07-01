@@ -6,18 +6,19 @@ import { logout } from "../services/logout";
 import { useSearch } from "../hooks/useSearch";
 import { isAuthenticated } from "../services/isAuthenticated";
 import { fetchUserProfile } from "../hooks/useFetchProfile";
+import { useAuth } from "../context/AuthContext";
 
 const Header = ()=>{
 
     const navigate = useNavigate();
-    const [user, setUser] = useState<UserProfile | null>(null);
+    const {user, setUser} = useAuth();
     const [showMenu, setShowMenu] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
     //const [authChecked, setAuthChecked] = useState(false)
 
     //useFetchProfile(setUser);
 
-    useEffect(() => {
+    /*useEffect(() => {
         const checkAuth = async () => {
             const auth = await isAuthenticated();
             if (auth) {
@@ -27,7 +28,7 @@ const Header = ()=>{
             //setAuthChecked(true);
         };
         checkAuth();
-    }, []);
+    }, []);*/
 
     const {
         query,

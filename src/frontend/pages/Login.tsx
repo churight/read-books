@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import "../styles/LoginAndRegister.css"
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import { useAuth } from '../context/AuthContext';
+import { fetchUserProfile } from '../hooks/useFetchProfile';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,6 +12,8 @@ const Login = () => {
   const [message, setMessage] = useState('');
   //const [token, setToken] = useState('');
   const navigate = useNavigate();
+
+  const {setUser} = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +26,12 @@ const Login = () => {
       });
       console.log('Login response:', res.data);
       setMessage('Login successful');
-      navigate('/browse');
+      const profile = await fetchUserProfile();
+      if (profile) {
+        setUser(profile);  // <-- update global user state
+      }
+
+      navigate('/home');
     } catch (err: any) {
       setMessage(err.response?.data?.message || 'Error occurred');
     }
