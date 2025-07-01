@@ -9,9 +9,9 @@ export const isAuthenticated = async (): Promise<boolean| null> =>{
         return true;
     }catch(e){
         if (axios.isAxiosError(e) && e.response?.status === 401){
-            return null
+            return false
         };
-        console.error(e);
-        return null;
+        console.error("Auth check failed", e);
+        return false;
     }
 }

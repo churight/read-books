@@ -7,6 +7,7 @@ import UserProfile from '../interfaces/IUserProfile';
 import handleLogout from '../services/handleLogout';
 import { Link } from 'react-router-dom';
 import "../styles/Profile.css"
+import { useAuthGuard } from '../hooks/useAuthGuard';
 
 interface FavouriteBooks{
     isbn13: string;
@@ -16,6 +17,8 @@ interface FavouriteBooks{
 }
 
 const Profile = () => {
+  useAuthGuard();
+
   const [user, setUser] = useState<UserProfile | null>(null);
   const [favourites, setFavourites] = useState<FavouriteBooks[]>([]);
   const [myBooks, setMyBooks] = useState<FavouriteBooks[]>([]); //for now, later change interface
@@ -29,11 +32,7 @@ const Profile = () => {
   useEffect(() => { // here there is a problem with favourites, create hook specifically for them, and honestly make it to the other file
     const fetchProfile = async () => {
       try {
-        const auth = await isAuthenticated();
-        if (!auth) {
-            navigate('/login');
-            return;
-          }
+
         const res = await axios.get('http://localhost:4000/api/auth/profile', {
           withCredentials: true
         });

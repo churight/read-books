@@ -53,7 +53,7 @@ router.get('/recommended', protect, verifyAndRefreshToken, async(req:AuthRequest
 });
 
 //get most viewed books
-router.get('/popular', protect, verifyAndRefreshToken, async(req: AuthRequest, res):Promise<void> =>{
+router.get('/popular', async(req: AuthRequest, res):Promise<void> =>{
     try{
         const topBooks = await Book.find({})
         .sort({ratings_count: -1})
@@ -68,7 +68,7 @@ router.get('/popular', protect, verifyAndRefreshToken, async(req: AuthRequest, r
 })
 
 //get books with highest rating
-router.get('/highest-rating', protect, verifyAndRefreshToken, async(req: AuthRequest, res):Promise<void> =>{
+router.get('/highest-rating', async(req: AuthRequest, res):Promise<void> =>{
 
     try{
         const topRatingBooks = await Book.find({})
@@ -85,7 +85,7 @@ router.get('/highest-rating', protect, verifyAndRefreshToken, async(req: AuthReq
 })
 
 //get newest
-router.get('/newest', protect, verifyAndRefreshToken, async(req: AuthRequest, res):Promise<void> =>{
+router.get('/newest', async(req: AuthRequest, res):Promise<void> =>{
 
     try{
         const newBooks = await Book.find({})

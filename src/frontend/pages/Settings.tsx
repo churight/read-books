@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react"
 import "../styles/Settings.css"
+import { useAuthGuard } from "../hooks/useAuthGuard";
 
 export const Settings = () =>{
+
+  useAuthGuard();
     const [nickname, setNickname] = useState('');
     const [nicknameMessage, setNicknameMessage] = useState('');
 

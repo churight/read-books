@@ -5,8 +5,11 @@ import { Link } from "react-router-dom";
 import { handleCheckout } from "../services/handleCheckout";
 import "../styles/Cart.css"
 import { handleDeleteFromCart } from "../services/handleRemoveFromCart";
+import { useAuthGuard } from "../hooks/useAuthGuard";
 
 export const CartPage = () =>{
+    useAuthGuard();
+
     const [books, setBooks] = useState<IBook[]>([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState(""); //use message somewhere

@@ -5,6 +5,7 @@ import { AuthRequest } from "../models/AuthRequest";
 import { MyBooks } from "../models/MyBooks";
 import { Cart } from "../models/Cart";
 import { Book } from "../models/Books";
+import { WishList } from "../models/WishList";
 
 const router = express.Router();
 
@@ -119,6 +120,19 @@ router.post('/cart/checkout', protect, verifyAndRefreshToken, async (req: AuthRe
         }
 
         await myBooks.save();
+
+        const wishlist = await WishList.findOne({user_id: userId});
+
+        if(wishlist){
+            const updateWishList = wishlist.books_isbn13.filter(
+                isbn => !cart.books_isbn13.includes(isbn)
+            );
+
+            if(updateWishList.length !== wishlist.books_isbn13.length){
+                wishlist.books_isbn13=updateWishList;
+                await wishlist.save();
+            }
+        }
 
         res.status(200).json({message: "Books moved to My Books"})
     }catch(error){
