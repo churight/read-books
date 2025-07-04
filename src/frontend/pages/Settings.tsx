@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import "../styles/Settings.css"
 import { useAuthGuard } from "../hooks/useAuthGuard";
 
@@ -17,9 +17,26 @@ export const Settings = () =>{
     const [message, setMessage] = useState('');
     const [previewUrl, setPreviewUrl] = useState('');
 
+    const [balance, setBalance] = useState<number | null> (null);
 
     const [activeTab, setActiveTab] = useState<'profilePicture' | 'usernameChange' | 'passwordChange' | 'addBalance'>('profilePicture');
 
+    useEffect(() => {
+      const fetchBalance = async () => {
+        try {
+          const res = await axios.get('http://localhost:4000/api/auth/profile', {
+            withCredentials: true,
+          });
+          setBalance(res.data.balance);
+        } catch (err) {
+          console.error("Failed to fetch balance");
+        }
+      };
+
+      if (activeTab === 'addBalance') {
+        fetchBalance();
+      }
+    }, [activeTab]);
 
     const handleNicknameChange = async (e: React.FormEvent) =>{
         e.preventDefault();
@@ -68,7 +85,9 @@ export const Settings = () =>{
       e.preventDefault();
 
       try{
-        const res = await axios.post('http://localhost:4000/api/user/addBalance', {}, {withCredentials: true})
+        const res = await axios.post('http://localhost:4000/api/user/addBalance', {}, {withCredentials: true});
+        setBalance(res.data.balance || "balance updated");
+        setMessage(res.data.message)
       }catch(err: any){
         setMessage(err.response?.data?.message || "Failed to add balance")
       }
@@ -163,7 +182,7 @@ export const Settings = () =>{
         )}
         {activeTab === 'addBalance' && (
           <form onSubmit={addBalanceChange} className="settings-form">
-            <h2><strong>Current balance: {}</strong></h2>
+            <h2><strong>Current balance: {balance}.00 $</strong></h2>
             <button type="submit" className="settings-button">
               Add 10$ to Balance
             </button>

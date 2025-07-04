@@ -98,6 +98,8 @@ router.post('/addBalance', protect, verifyAndRefreshToken, async(req:AuthRequest
     }
     user.balance = (user.balance ?? 0) + 10;
     await user.save();
+
+    res.status(200).json({message: "Balance updated", balance: user.balance})
   }catch(err){
     console.error(err);
     res.status(500).json({message: "Server error"})
