@@ -5,6 +5,10 @@ import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import { protect } from "../middleware/authMiddleware";
 import {OAuth2Client} from 'google-auth-library';
+import nodemailer from "nodemailer";
+import crypto from 'crypto';
+
+
 
 dotenv.config();
 
@@ -165,6 +169,51 @@ router.post('/google-login', async(req: Request, res:Response):Promise<void> =>{
     }catch(err){
         console.error(err);
         res.status(500).json({message: "server error"})
+    }
+})
+
+router.post('/forgot-password', async(req: Request, res:Response):Promise<void> =>{
+    const {email} = req.body;
+
+    const user = await User.findOne({email});
+    if(!user) {
+        res.status(404).json({message: "User not found"});
+        return;
+    }
+
+    //generate temp password
+
+    const tempPassword = crypto.randomBytes(4).toString('hex'); // e.g., 'a3f9b1c2'
+    const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+    console.log(tempPassword)
+
+    // Update user's password
+    user.password = hashedPassword;
+    await user.save();
+
+    // Send email
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+        },
+    });
+
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: 'Your Temporary Password',
+        text: `Your temporary password is: ${tempPassword}\nPlease log in and change it immediately.`,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({ message: 'Temporary password sent to your email' });
+    } catch (err) {
+        console.error('Email error:', err);
+        res.status(500).json({ message: 'Failed to send email' });
     }
 })
 

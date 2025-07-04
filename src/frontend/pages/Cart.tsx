@@ -7,6 +7,8 @@ import "../styles/Cart.css"
 import { handleDeleteFromCart } from "../services/handleRemoveFromCart";
 import { useAuthGuard } from "../hooks/useAuthGuard";
 
+
+//as i don't have data for book prices i', hardcoding every book to cost 5$
 export const CartPage = () =>{
     useAuthGuard();
 

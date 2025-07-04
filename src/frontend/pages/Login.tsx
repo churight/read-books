@@ -5,6 +5,7 @@ import "../styles/LoginAndRegister.css"
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import { fetchUserProfile } from '../hooks/useFetchProfile';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -73,7 +74,7 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <a href="#" className="forgot-password">Forgot password?</a>
+        <Link to="/forgot-password" className="forgot-password">Forgot password?</Link>
         <button type="submit">Get Started</button>
       </form>
       <div className="social-login">

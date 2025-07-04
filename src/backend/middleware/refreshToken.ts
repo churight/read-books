@@ -10,7 +10,7 @@ interface JwtPayload {
   exp: number;
 }
 
-export const verifyAndRefreshToken = (req: Request, res:Response, next:NextFunction):void =>{
+export const verifyAndRefreshToken = async (req: Request, res:Response, next:NextFunction):Promise<void> =>{
     const token = req.cookies?.token; //get token from cookies
 
     if(!token){

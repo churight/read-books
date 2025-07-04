@@ -13,6 +13,7 @@ import { Search } from './frontend/pages/Search';
 import { CartPage } from './frontend/pages/Cart';
 import { Settings } from './frontend/pages/Settings';
 import { AuthProvider } from './frontend/context/AuthContext';
+import { ForgotPassword } from './frontend/components/ForgotPassword';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
               <Route path="/search" element={<Search />} />
               <Route path="/cart" element={<CartPage />}/>
               <Route path="/settings" element={<Settings />}/>
+              <Route path="/forgot-password" element={<ForgotPassword />} />
             </Routes>
           </main>
         </AuthProvider>
