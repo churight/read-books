@@ -154,6 +154,7 @@ const BookInfo =()=>{
             <p><strong>ISBN-13:</strong> {book.isbn13}</p>
             <p><strong>ISBN-10:</strong> {book.isbn10}</p>
             <p><strong>Description:</strong> {book.description}</p>
+            <h2><strong>Price: 5$</strong></h2>
           </div>
           <div className="book-info-action-buttons">
             {isFavourite ? (

@@ -92,7 +92,8 @@ router.get('/profile',protect, async (req: Request & { user?: any }, res: Respon
         res.json({
             nickname: user.nickname,
             email: user.email,
-            profilePicture: user.profilePicture
+            profilePicture: user.profilePicture,
+            balance: user.balance
           });
     }catch(e){
         res.status(500).json({message:"Server Error", e})

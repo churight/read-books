@@ -28,7 +28,7 @@ const Login = () => {
       setMessage('Login successful');
       const profile = await fetchUserProfile();
       if (profile) {
-        setUser(profile);  // <-- update global user state
+        setUser(profile);  
       }
 
       navigate('/home');

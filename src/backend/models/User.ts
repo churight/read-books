@@ -5,7 +5,8 @@ export interface IUser extends Document {
     email:string,
     password: string,
     profilePicture?: string,
-    provider?: 'google' | 'local';
+    provider?: 'google' | 'local',
+    balance: number
 }
 
 const UserSchema: Schema = new Schema<IUser>({
@@ -17,7 +18,8 @@ const UserSchema: Schema = new Schema<IUser>({
       return this.provider !== 'google'}
     },
     profilePicture:{type: String},
-    provider: { type: String, enum: ['google', 'local'], default: 'local' }
+    provider: { type: String, enum: ['google', 'local'], default: 'local' },
+    balance: {type: Number, default: 0}
 })
 
 const authDb = mongoose.connection.useDb('auth_db');

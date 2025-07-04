@@ -17,7 +17,8 @@ export const Settings = () =>{
     const [message, setMessage] = useState('');
     const [previewUrl, setPreviewUrl] = useState('');
 
-    const [activeTab, setActiveTab] = useState<'profilePicture' | 'usernameChange' | 'passwordChange'>('profilePicture');
+
+    const [activeTab, setActiveTab] = useState<'profilePicture' | 'usernameChange' | 'passwordChange' | 'addBalance'>('profilePicture');
 
 
     const handleNicknameChange = async (e: React.FormEvent) =>{
@@ -63,6 +64,16 @@ export const Settings = () =>{
     }
     };
 
+    const addBalanceChange = async(e: React.FormEvent) =>{
+      e.preventDefault();
+
+      try{
+        const res = await axios.post('http://localhost:4000/api/user/addBalance', {}, {withCredentials: true})
+      }catch(err: any){
+        setMessage(err.response?.data?.message || "Failed to add balance")
+      }
+    }
+
     return (
         <div className="settings-container">
       <div className="settings-sidebar">
@@ -83,6 +94,12 @@ export const Settings = () =>{
           onClick={() => setActiveTab('passwordChange')}
         >
           Password Change
+        </button>
+        <button 
+          className={`settings-sidebar-button ${activeTab === 'addBalance' ? 'settings-sidebar-button-active' : ''}`}
+          onClick={() => setActiveTab('addBalance')}
+        >
+          Add Balance  
         </button>
       </div>
       <div className="settings-main-content">
@@ -142,6 +159,14 @@ export const Settings = () =>{
             />
             <button type="submit" className="settings-button">Update Password</button>
             {passwordMessage && <p className="settings-message">{passwordMessage}</p>}
+          </form>
+        )}
+        {activeTab === 'addBalance' && (
+          <form onSubmit={addBalanceChange} className="settings-form">
+            <h2><strong>Current balance: {}</strong></h2>
+            <button type="submit" className="settings-button">
+              Add 10$ to Balance
+            </button>
           </form>
         )}
       </div>

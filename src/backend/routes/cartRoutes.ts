@@ -6,6 +6,7 @@ import { MyBooks } from "../models/MyBooks";
 import { Cart } from "../models/Cart";
 import { Book } from "../models/Books";
 import { WishList } from "../models/WishList";
+import { User } from "../models/User";
 
 const router = express.Router();
 
@@ -99,6 +100,24 @@ router.post('/cart/checkout', protect, verifyAndRefreshToken, async (req: AuthRe
             res.status(400).json({message:"cart is empty or payed for"});
             return;
         }
+
+        const totalPrice = cart.books_isbn13.length * 5;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+
+        if ((user.balance ?? 0) < totalPrice) {
+            res.status(400).json({ message: "Insufficient balance" });
+            return;
+        }
+
+        //  Deduct balance
+        user.balance -= totalPrice;
+        await user.save();
 
         cart.status = "payed for";
         await cart.save();

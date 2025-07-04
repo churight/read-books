@@ -95,8 +95,9 @@ const Header = ()=>{
                             {showMenu && (
                                 <div className="dropdown-menu">
                                     <div className="user-info">
-                                        <strong>{user.nickname}</strong>
-                                        <small>{user.email}</small>
+                                        <div><strong>{user.nickname}</strong></div>
+                                        <div><small>{user.email}</small></div>
+                                        <div><strong>Balance: ${user.balance?.toFixed(2) ?? '0.00'}</strong></div>
                                     </div>
                                     <Link to="/profile">Profile Info</Link>
                                     <Link to="/cart">Cart</Link>

@@ -81,6 +81,7 @@ export const CartPage = () =>{
                     </div>
                 ))}
                 </div>
+                <h2>Total: {books.length * 5} $</h2>
             <button onClick={handleCheckoutClick} className="cart-checkout-button">
                 Proceed to Payment
             </button>
