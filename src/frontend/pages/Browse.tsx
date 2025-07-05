@@ -3,7 +3,7 @@ import axios from "axios";
 import IBook from "../interfaces/IBook";
 import { Link} from "react-router-dom";
 import "../styles/Browse.css"
-import { handleAddCart } from "../services/handleAddCart";
+//import { handleAddCart } from "../services/handleAddCart";
 
 const Browse = ()=>{
     const [books, setBooks] = useState<IBook[]>([]);

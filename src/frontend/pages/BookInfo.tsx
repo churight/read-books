@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import IBook from "../interfaces/IBook";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -29,7 +29,7 @@ const BookInfo =()=>{
 
     const {myBooks, loadingMyBooks} = useMyBooks();
 
-    const fetchReviews = async () =>{
+    const fetchReviews =useCallback(async () =>{
             try{
                 const res = await axios.get(`http://localhost:4000/api/browse/books/${isbn13}/reviews`, {
                     withCredentials:true
@@ -38,7 +38,7 @@ const BookInfo =()=>{
             }catch(err){
                 console.error("Error fetching data:", err);
             }
-        };
+        }, [isbn13]);
 
     useEffect(() =>{ // also in another file smotime later
         const fetchBook = async ()=>{

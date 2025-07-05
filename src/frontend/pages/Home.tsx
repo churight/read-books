@@ -31,7 +31,7 @@ const Home = () => {
         setNewest(newRes.data.books);
       } catch (err: any) {
         setError(err.response?.data?.message || 'Error loading public books');
-        console.log(error)
+        //console.log(error)
       }
     };
 
@@ -53,6 +53,8 @@ const Home = () => {
 
     fetchPublicData();
     fetchPrivateData();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
