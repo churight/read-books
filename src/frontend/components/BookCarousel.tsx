@@ -23,7 +23,7 @@ const BookCarousel = ({ title, books }: BookCarouselProps) => {
   };
 
   return (
-    <div className="recommendations-carousel">
+     <div className="recommendations-container">
       <h2>{title}</h2>
       {books.length === 0 ? (
         <p>No books found.</p>
@@ -39,9 +39,9 @@ const BookCarousel = ({ title, books }: BookCarouselProps) => {
           <div className="recommendations-books-container">
             <div
               className="recommendations-books-slide"
-              style={{ transform: `translateX(-${currentIndex * 186}px)` }} // 180px width + 6px gap
+              style={{ transform: `translateX(-${currentIndex * 198}px)` }}
             >
-              {visibleBooks.map((book) => (
+              {books.map((book) => (
                 <Link
                   to={`/book/${book.isbn13}`}
                   key={book.isbn13}

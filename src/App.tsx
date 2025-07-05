@@ -1,4 +1,4 @@
-import React from 'react';
+//import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Register from './frontend/pages/Register';
@@ -7,7 +7,7 @@ import Header from './frontend/components/Header';
 import Profile from './frontend/pages/Profile';
 import Browse from './frontend/pages/Browse';
 import BookInfo from './frontend/pages/BookInfo';
-import Welcome from './frontend/pages/Welcome';
+//import Welcome from './frontend/pages/Welcome';
 import Home from './frontend/pages/Home';
 import { Search } from './frontend/pages/Search';
 import { CartPage } from './frontend/pages/Cart';
@@ -23,7 +23,6 @@ function App() {
           <Header />
           <main className='content'>
             <Routes>
-              <Route path='/' element={<Welcome />}/>
               <Route path='/home' element={<Home/>}/>
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
