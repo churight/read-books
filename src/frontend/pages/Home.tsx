@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import IBook from "../interfaces/IBook";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import "../styles/Home.css";
 import BookCarousel from "../components/BookCarousel";
-import { useAuthGuard } from "../hooks/useAuthGuard";
+//import { useAuthGuard } from "../hooks/useAuthGuard";
 import { isAuthenticated } from "../services/isAuthenticated";
 
 const Home = () => {
@@ -14,7 +14,7 @@ const Home = () => {
   const [highestRating, setHighestRating] = useState<IBook[]>([]);
   const [newest, setNewest] = useState<IBook[]>([]);
   const [error, setError] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
+  //const [currentIndex, setCurrentIndex] = useState(0);
   const [isAuth, setIsAuth] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -31,6 +31,7 @@ const Home = () => {
         setNewest(newRes.data.books);
       } catch (err: any) {
         setError(err.response?.data?.message || 'Error loading public books');
+        console.log(error)
       }
     };
 

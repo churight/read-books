@@ -29,6 +29,17 @@ const BookInfo =()=>{
 
     const {myBooks, loadingMyBooks} = useMyBooks();
 
+    const fetchReviews = async () =>{
+            try{
+                const res = await axios.get(`http://localhost:4000/api/browse/books/${isbn13}/reviews`, {
+                    withCredentials:true
+                });
+                setReviews(res.data.reviews);
+            }catch(err){
+                console.error("Error fetching data:", err);
+            }
+        };
+
     useEffect(() =>{ // also in another file smotime later
         const fetchBook = async ()=>{
             try{
@@ -46,18 +57,7 @@ const BookInfo =()=>{
         fetchBook();
         fetchReviews();
 
-    }, [isbn13]);
-
-    const fetchReviews = async () =>{
-            try{
-                const res = await axios.get(`http://localhost:4000/api/browse/books/${isbn13}/reviews`, {
-                    withCredentials:true
-                });
-                setReviews(res.data.reviews);
-            }catch(err){
-                console.error("Error fetching data:", err);
-            }
-        };
+    }, [isbn13, fetchReviews]);
 
     const handleClickFavourite = async () => {
     if (!book) return;

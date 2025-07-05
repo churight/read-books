@@ -45,6 +45,7 @@ const Login = () => {
       }, {
         withCredentials: true,
       });
+      console.log('Login response:', res.data);
       setMessage('Google login successful');
       navigate('/browse');
     } catch (err: any) {

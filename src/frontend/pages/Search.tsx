@@ -45,6 +45,7 @@ export const Search = () =>{
     fetchResults();
   }, [query, sortBy, order])
 
+  if (loading === false) return <div>Loading...</div>;
     
   return (
     <div className="browse-container">

@@ -1,11 +1,11 @@
-import {useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import UserProfile from "../interfaces/IUserProfile";
+//import UserProfile from "../interfaces/IUserProfile";
 import "../styles/Header.css"
 import { logout } from "../services/logout";
 import { useSearch } from "../hooks/useSearch";
-import { isAuthenticated } from "../services/isAuthenticated";
-import { fetchUserProfile } from "../hooks/useFetchProfile";
+//import { isAuthenticated } from "../services/isAuthenticated";
+//import { fetchUserProfile } from "../hooks/useFetchProfile";
 import { useAuth } from "../context/AuthContext";
 
 const Header = ()=>{

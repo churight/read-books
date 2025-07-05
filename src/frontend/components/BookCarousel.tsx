@@ -10,7 +10,7 @@ interface BookCarouselProps {
 const BookCarousel = ({ title, books }: BookCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const visibleBooks = books.slice(currentIndex, currentIndex + 5);
+  //const visibleBooks = books.slice(currentIndex, currentIndex + 5);
   const canScrollLeft = currentIndex > 0;
   const canScrollRight = currentIndex + 5 < books.length;
 
