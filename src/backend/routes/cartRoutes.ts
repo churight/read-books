@@ -3,7 +3,7 @@ import { protect } from "../middleware/authMiddleware";
 import { verifyAndRefreshToken } from "../middleware/refreshToken";
 import { AuthRequest } from "../models/AuthRequest";
 import { MyBooks } from "../models/MyBooks";
-import { Cart } from "../models/Cart";
+import { Cart, CartDocument } from "../models/Cart";
 import { Book } from "../models/Books";
 import { WishList } from "../models/WishList";
 import { User } from "../models/User";
@@ -197,5 +197,22 @@ router.delete('/delete/cart', protect, verifyAndRefreshToken, async (req: AuthRe
     }
 });
 
+router.get('/cart/history', protect, verifyAndRefreshToken, async (req: AuthRequest, res): Promise<void> =>{
+    try{
+        const userId = req.user.id;
+        
+        const paidCarts= await Cart.find({
+            user_id: userId,
+            status: "payed for"
+        }).sort({ purchase_id: -1 })
+
+        res.status(200).json({cart:paidCarts});
+        //console.log(paidCarts)
+        
+    }catch(error){
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+})
 
 export default router;

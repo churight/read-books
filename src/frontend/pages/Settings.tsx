@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react"
 import "../styles/Settings.css"
 import { useAuthGuard } from "../hooks/useAuthGuard";
+import { usePurchaseHistory } from "../hooks/usePurchaseHistory";
 
 export const Settings = () =>{
 
@@ -19,7 +20,9 @@ export const Settings = () =>{
 
     const [balance, setBalance] = useState<number | null> (null);
 
-    const [activeTab, setActiveTab] = useState<'profilePicture' | 'usernameChange' | 'passwordChange' | 'addBalance'>('profilePicture');
+    const [activeTab, setActiveTab] = useState<'profilePicture' | 'usernameChange' | 'passwordChange' | 'addBalance' | 'purchaseHistory'>('profilePicture');
+
+    const {cartHistory, loading: cartLoading} = usePurchaseHistory(activeTab)
 
     useEffect(() => {
       const fetchBalance = async () => {
@@ -120,6 +123,12 @@ export const Settings = () =>{
         >
           Add Balance  
         </button>
+         <button 
+          className={`settings-sidebar-button ${activeTab === 'purchaseHistory' ? 'settings-sidebar-button-active' : ''}`}
+          onClick={() => setActiveTab('purchaseHistory')}
+        >
+          Purchase History   
+        </button>
       </div>
       <div className="settings-main-content">
         {activeTab === 'profilePicture' && (
@@ -187,6 +196,43 @@ export const Settings = () =>{
               Add 10$ to Balance
             </button>
           </form>
+        )}
+        {activeTab === 'purchaseHistory' && (
+          <div className="purchase-history-container">
+            <h2 className="purchase-history-title">
+              Your Purchase History
+            </h2>
+            {cartLoading ? (
+              <p className="purchase-history-loading">
+                Loading...
+              </p>
+            ) : cartHistory.length === 0 ? (
+              <p className="purchase-history-empty">
+                No purchases found.
+              </p>
+            ) : (
+              cartHistory.map((cart, index) => (
+                <div key={index} className="purchase-entry">
+                  <div className="purchase-header" onClick={(e) => {
+                    const dropdown = e.currentTarget.nextElementSibling as HTMLElement;
+                    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                  }}>
+                    <h3 className="purchase-id">
+                      Purchase #{cart.purchase_id}
+                    </h3>
+                    <p className="purchase-total">
+                      Total: ${cart.books_isbn13.length * 5}
+                    </p>
+                  </div>
+                  <div className="purchase-dropdown">
+                    <p className="purchase-books">
+                      <strong>Books ISBN-13:</strong> {cart.books_isbn13.join(', ')}
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         )}
       </div>
     </div>

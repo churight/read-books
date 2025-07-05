@@ -1,6 +1,6 @@
 .settings-container {
   display: flex;
-  width: 90%;
+  width: 100%;
   max-width: 1200px;
   margin: 60px auto 0;
   padding: 2rem;
@@ -97,4 +97,69 @@
   margin-top: 1rem;
   color: #333;
   font-size: 1rem;
+}
+
+.purchase-history-container {
+  width: 100%;
+  padding: 2rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.purchase-history-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.purchase-history-loading {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.purchase-history-empty {
+  font-size: 1.1rem;
+  color: #666;
+  font-style: italic;
+}
+
+.purchase-entry {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.purchase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.purchase-id {
+  font-size: 1.3rem;
+  color: #333;
+  margin: 0;
+}
+
+.purchase-total {
+  font-size: 1.1rem;
+  color: #444;
+  margin: 0;
+  font-weight: bold;
+}
+
+.purchase-dropdown {
+  display: none;
+  margin-top: 0.5rem;
+}
+
+.purchase-books {
+  font-size: 1rem;
+  color: #666;
+  margin: 0.5rem 0;
 }
