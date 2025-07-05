@@ -1,20 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import IBook from "../interfaces/IBook";
-//import { Link } from "react-router-dom";
 import "../styles/Home.css";
 import BookCarousel from "../components/BookCarousel";
-//import { useAuthGuard } from "../hooks/useAuthGuard";
 import { isAuthenticated } from "../services/isAuthenticated";
 
 const Home = () => {
-
   const [recBooks, setRecBooks] = useState<IBook[]>([]);
   const [popular, setPopular] = useState<IBook[]>([]);
   const [highestRating, setHighestRating] = useState<IBook[]>([]);
   const [newest, setNewest] = useState<IBook[]>([]);
-  const [error, setError] = useState('');
-  //const [currentIndex, setCurrentIndex] = useState(0);
+  const [error, setError] = useState<string>(''); // Explicitly type error as string
   const [isAuth, setIsAuth] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -31,38 +27,39 @@ const Home = () => {
         setNewest(newRes.data.books);
       } catch (err: any) {
         setError(err.response?.data?.message || 'Error loading public books');
-        //console.log(error)
       }
     };
 
     const fetchPrivateData = async () => {
-      const auth = await isAuthenticated();
-      setIsAuth(auth);
+      try {
+        const auth = await isAuthenticated();
+        setIsAuth(auth);
 
-      if (auth) {
-        try {
+        if (auth) {
           const recRes = await axios.get('http://localhost:4000/api/recommendations/recommended', {
             withCredentials: true,
           });
           setRecBooks(recRes.data);
-        } catch (err: any) {
-          console.error("Failed to fetch recommended books:", err);
         }
+      } catch (err: any) {
+        console.error("Failed to fetch recommended books:", err);
+        setError(err.response?.data?.message || 'Error loading recommended books');
       }
     };
 
     fetchPublicData();
     fetchPrivateData();
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className="recommendations-container">
-     {isAuth === true && recBooks.length > 0 &&( <BookCarousel title="Books You Might Like" books={recBooks} />)}
-      <BookCarousel title="Popular Books" books={popular} />
-      <BookCarousel title="Top Rated Books" books={highestRating} />
-      <BookCarousel title="Newest Books" books={newest} />
+      {error && <div className="error-message" role="alert">{error}</div>}
+      {isAuth === true && recBooks.length > 0 && (
+        <BookCarousel title="Books You Might Like" books={recBooks} />
+      )}
+      {popular.length > 0 && <BookCarousel title="Popular Books" books={popular} />}
+      {highestRating.length > 0 && <BookCarousel title="Top Rated Books" books={highestRating} />}
+      {newest.length > 0 && <BookCarousel title="Newest Books" books={newest} />}
     </div>
   );
 };
